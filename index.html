@@ -3,192 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECAV Liptovský Hrádok - Oficiálny Web</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <title>ECAV Liptovský Hrádok | Evanjelický a.v. cirkevný zbor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
+        /* --- CSS PREMENNÉ A RESET --- */
         :root {
-            --bg-dark: #0b1120;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-light: #94a3b8;
-            --accent: #fbbf24;
-            --accent-glow: rgba(251, 191, 36, 0.4);
-            --glass: rgba(30, 41, 59, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
+            --primary-color: #1a1a1a;
+            --accent-color: #c4a47c; /* Zlatá / piesková */
+            --bg-light: #fafafa;
+            --bg-white: #ffffff;
+            --text-main: #4a4a4a;
+            --font-heading: 'Playfair Display', serif;
+            --font-text: 'Inter', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { font-family: 'Montserrat', sans-serif; color: var(--text-main); background-color: var(--bg-dark); line-height: 1.6; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-text);
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- TYPOGRAFIA --- */
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent-color);
+            margin: 15px auto 0;
+        }
 
         /* --- NAVIGÁCIA --- */
-        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: var(--glass); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 1rem 0; text-align: center; }
-        .logo-title { font-weight: 700; font-size: 1.3rem; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
-        nav ul { list-style: none; display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
-        nav a { text-decoration: none; color: var(--text-main); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; transition: 0.3s; padding: 5px 10px; }
-        nav a:hover { color: var(--accent); }
-
-        /* --- SEKCIE --- */
-        section { padding: 100px 8% 60px 8%; }
-        .section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 3rem; color: var(--accent); }
-
-        /* --- 1. DOMOV (Paralaxa) --- */
-        #domov {
-            background-image: linear-gradient(rgba(11, 17, 32, 0.7), rgba(11, 17, 32, 0.7)), url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2000');
-            background-attachment: fixed; background-position: center; background-size: cover;
-            height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center;
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: transparent;
+            padding: 20px 50px;
+            transition: all 0.4s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .hero-box { background: var(--glass); padding: 3rem; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
 
-        /* --- 2. NAŠE STRETNUTIA & KALENDÁR --- */
-        .meeting-container { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
-        .calendar-box { background: var(--bg-card); padding: 2rem; border-radius: 15px; border: 1px solid var(--border); height: fit-content; }
-        .cal-header { text-align: center; font-weight: 700; margin-bottom: 1rem; color: var(--accent); }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-        .day-name { font-size: 0.7rem; color: var(--text-light); font-weight: bold; padding-bottom: 10px; }
-        .day { padding: 10px 0; background: rgba(255,255,255,0.05); border-radius: 5px; cursor: default; font-size: 0.9rem; transition: 0.3s; }
-        .day.event { background: var(--accent); color: #000; font-weight: 700; cursor: pointer; box-shadow: 0 0 10px var(--accent-glow); }
-        .day.event:hover { transform: scale(1.1); }
+        header.scrolled {
+            background: var(--bg-white);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            padding: 15px 50px;
+        }
 
-        /* Okno s detailom dňa */
-        #event-detail { margin-top: 1.5rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 10px; border-left: 4px solid var(--accent); display: none; animation: fadeIn 0.5s; }
+        header.scrolled .logo, header.scrolled nav ul li a {
+            color: var(--primary-color);
+        }
 
-        /* --- 3. AKTUALITY (Grid systém) --- */
-        #aktualne { background: #0f172a; }
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .news-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
-        .news-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .news-content { padding: 1.5rem; }
-        .news-tag { background: var(--accent); color: #000; font-size: 0.6rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
-        .news-title { margin-top: 10px; font-size: 1.2rem; font-family: 'Playfair Display', serif; }
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--bg-white);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.4s ease;
+        }
 
-        /* --- KONTAKT & ÚČET --- */
-        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .info-card { background: var(--bg-card); padding: 2rem; border-radius: 15px; position: relative; overflow: hidden; }
-        .info-card h3 { color: var(--accent); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-        .iban-box { background: #000; padding: 1rem; border-radius: 8px; font-family: monospace; color: var(--accent); font-size: 1.1rem; text-align: center; margin-top: 10px; border: 1px dashed var(--accent); }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @media (max-width: 900px) { .meeting-container { grid-template-columns: 1fr; } }
+        nav ul li a {
+            text-decoration: none;
+            color: var(--bg-white);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- HERO SEKCIA (Parallax) --- */
+        .hero {
+            height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1437603568260-1950d3ca6eab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Parallax efekt */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--bg-white);
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            color: var(--bg-white);
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease forwards;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            font-style: italic;
+            font-family: var(--font-heading);
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            background-color: var(--accent-color);
+            color: var(--bg-white);
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 3px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+
+        .btn:hover {
+            background-color: #a88a64;
+            transform: translateY(-3px);
+        }
+
+        /* --- SEKCIE SPOLOČNÉ --- */
+        section {
+            padding: 100px 10%;
+        }
+
+        /* --- AKTUALNE / BOHOSLUŽBY --- */
+        .worship-times {
+            background: var(--bg-white);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .worship-times h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .worship-times p {
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .time-highlight {
+            font-size: 2rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            display: block;
+            margin: 20px 0;
+        }
+
+        /* --- ŽIVOT ZBORU (Grid) --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: var(--bg-white);
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .card-contact {
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        /* --- PARALLAX CITÁT DIVIDER --- */
+        .quote-divider {
+            padding: 150px 20px;
+            background-image: linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.8)), url('https://images.unsplash.com/photo-1548625361-ec85741eb0a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            text-align: center;
+            color: var(--bg-white);
+        }
+
+        .quote-divider h2 {
+            color: var(--bg-white);
+            font-size: 2.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.4;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .quote-divider p {
+            margin-top: 20px;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* --- KONTAKT A PÄTIČKA --- */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            padding: 80px 10% 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-col h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-family: var(--font-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-col p {
+            color: #bbb;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .footer-col a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #777;
+            font-size: 0.85rem;
+        }
+
+        /* --- ANIMÁCIE PRI SKROLOVANÍ --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Keyframes pre Hero */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MOBILNÉ ZARIADENIA --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            header { padding: 20px; background: var(--bg-white); }
+            .logo, nav ul li a { color: var(--primary-color); }
+            nav ul { display: none; /* Pre reálny web by tu pribudol hamburger menu script */ }
+            section { padding: 60px 5%; }
+            .quote-divider { padding: 100px 20px; }
+            .quote-divider h2 { font-size: 1.5rem; }
+            .time-highlight { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-title">ECAV Liptovský Hrádok</div>
-    <nav>
-        <ul>
-            <li><a href="#domov">Domov</a></li>
-            <li><a href="#nase-stretnutia">Stretnutia</a></li>
-            <li><a href="#aktualne">Aktuálne</a></li>
-            <li><a href="#o-nas">O nás</a></li>
-            <li><a href="#kontakt">Kontakt</a></li>
-        </ul>
-    </nav>
-</header>
+    <header id="navbar">
+        <a href="#" class="logo">ECAV Liptovský Hrádok</a>
+        <nav>
+            <ul>
+                <li><a href="#domov">Domov</a></li>
+                <li><a href="#bohosluzby">Bohoslužby</a></li>
+                <li><a href="#zivot-zboru">Život zboru</a></li>
+                <li><a href="#obrady">Obrady</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<section id="domov">
-    <div class="hero-box">
-        <h1 class="hero-quote" style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem;">Milosť vám a pokoj od Boha...</h1>
-        <p style="color: var(--accent); letter-spacing: 2px;">VÍTAJTE NA STRÁNKACH CIRKEVNÉHO ZBORU</p>
-    </div>
-</section>
+    <section id="domov" class="hero">
+        <h1>Vitajte v našom spoločenstve</h1>
+        <p>„...aby Kristus prebýval vierou vo vašich srdciach, a vy, zakorenení a založení v láske, aby ste mohli so všetkými svätými vystihnúť, aká je to šírka a dĺžka, výška a hĺbka...“ (Ef 3, 17-19a)</p>
+        <a href="#bohosluzby" class="btn">Kedy sa stretávame?</a>
+    </section>
 
-<section id="nase-stretnutia">
-    <h2 class="section-title">Kalendár & Stretnutia</h2>
-    <div class="meeting-container">
-        <div class="calendar-box">
-            <div class="cal-header">Apríl 2026</div>
-            <div class="cal-grid">
-                <div class="day-name">Po</div><div class="day-name">Ut</div><div class="day-name">St</div><div class="day-name">Št</div><div class="day-name">Pi</div><div class="day-name">So</div><div class="day-name">Ne</div>
+    <section id="bohosluzby" class="bg-light">
+        <h2 class="section-title reveal">Služby Božie</h2>
+        <div class="worship-times reveal">
+            <h3>Nedeľné Služby Božie</h3>
+            <p>Schádzame sa prevažne v nedele, aby sme spoločne počúvali Božie slovo a modlili sa.</p>
+            <span class="time-highlight">Každú nedeľu o 09:00 hod.</span>
+            <p>v našom kostole na Hviezdoslavovej ulici v Liptovskom Hrádku. <br>Súčasťou služieb je aj <strong>detská besiedka</strong> pre najmenších.</p>
+        </div>
+    </section>
+
+    <section id="zivot-zboru" style="background-color: var(--bg-white);">
+        <h2 class="section-title reveal">Život zboru</h2>
+        <div class="grid-container">
+            <div class="card reveal">
+                <h3>Rodinné stretnutia</h3>
+                <p>Spoločenstvo viacerých rodín, ktoré sa stretávajú dvakrát do mesiaca v domácnostiach aj zborovej miestnosti. Zdieľame sa, modlíme a premýšľame o Božom slove.</p>
+                <div class="card-contact">Kontakt: Peter Babic, Ivan Gabčo</div>
+            </div>
+            <div class="card reveal">
+                <h3>Stretnutia mužov</h3>
+                <p>Neformálne stretnutia každú stredu o 18:30 hod. Vzájomné povzbudenie vo viere, spoločné zdieľanie a modlitebná podpora.</p>
+                <div class="card-contact">Kontakt: Ivan Plachtinský</div>
+            </div>
+            <div class="card reveal">
+                <h3>Mamiklub</h3>
+                <p>Milé mamičky, srdečne vás pozývame vždy vo štvrtok (9:30 - 11:30) do zborových priestorov. Je tu pripravený detský kútik, piesne a tvorivé dielne.</p>
+                <div class="card-contact">Kontakt: Mgr. Anna Belanji</div>
+            </div>
+            <div class="card reveal">
+                <h3>Dorast a mládež</h3>
+                <p>Mladí ľudia (13-17 rokov). Schádzame sa každý piatok o 17:00 hod. Hľadáme odpovede na otázky, učíme sa z Biblie a budujeme priateľstvá.</p>
+                <div class="card-contact">Piatok o 17:00 v zborovej miestnosti</div>
+            </div>
+            <div class="card reveal">
+                <h3>Biblické hodiny</h3>
+                <p>Hlbšie štúdium Božieho slova a osobný rast viery, diskusia a osobné svedectvá. Každý utorok o 18:00 hod.</p>
+                <div class="card-contact">Kontakt: Mgr. Anna Belanji</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quote-divider">
+        <h2 class="reveal">„Túžime Vám aj v ťažkých chvíľach pomôcť, modliť sa za vás a s vami, a povzbudiť Božím slovom.“</h2>
+        <p class="reveal">Sme tu pre Vás v každom období života</p>
+    </section>
+
+    <section id="obrady" class="bg-light">
+        <h2 class="section-title reveal">Obrady a sviatosti</h2>
+        <div class="grid-container">
+            <div class="card reveal">
+                <h3>Konfirmácia</h3>
+                <p>Prijatie mladých ľudí za dospelých členov cirkvi (od 14 rokov). Absolvujú dvojročné vyučovanie formou stretnutí v piatok o 16:00.</p>
+            </div>
+            <div class="card reveal">
+                <h3>Sobáše a manželstvo</h3>
+                <p>Doporučujeme rezervovať si termín čo najskôr. Možné je aj prijatie požehnania manželstva po štátnom sobáši.</p>
+            </div>
+            <div class="card reveal">
+                <h3>Pohreby a sprevádzanie</h3>
+                <p>V časoch lúčenia s blízkymi sme pripravení vás navštíviť, modliť sa a pripraviť dôstojný pohrebný obrad.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="kontakt">
+        <div class="footer-grid">
+            <div class="footer-col reveal">
+                <h4>Adresa a sídlo</h4>
+                <p>Evanjelický a.v. cirkevný zbor<br>Liptovský Hrádok</p>
+                <p>Hviezdoslavova 142<br>033 01 Liptovský Hrádok</p>
+            </div>
+            <div class="footer-col reveal">
+                <h4>Predsedníctvo zboru</h4>
+                <p><strong>Mgr. Michal Belanji</strong><br>Administrátor CZ<br>Tel: +421 918 828 303</p>
+                <p style="margin-top: 15px;"><strong>Mgr. Anna Belanji</strong><br>Zborová farárka<br>Tel: +421 918 828 050</p>
+            </div>
+            <div class="footer-col reveal">
+                <h4>Ďalšie vedenie</h4>
+                <p><strong>Ján Pavlík</strong><br>Zborový dozorca</p>
+                <p><strong>Oliva Vrbičanová</strong><br>Zástupkyňa dozorcu</p>
+            </div>
+            <div class="footer-col reveal">
+                <h4>Rýchle odkazy</h4>
+                <p><a href="#">Materská škola KORÁB</a></p>
+                <p><a href="#">Spoločenstvo evanjelickej mládeže</a></p>
+                <p><a href="#">Online Biblia</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Vytvorené v rámci moderného redizajnu pre cirkevný zbor ECAV Liptovský Hrádok.
+        </div>
+    </footer>
+
+    <script>
+        // 1. Zmena pozadia navigácie pri scrollovaní
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // 2. Fade-in animácie pre prvky (Intersection Observer)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100; // Aký kus prvku musí byť vidieť pre aktiváciu animácie
                 
-                <div class="day"></div><div class="day"></div><div class="day">1</div>
-                <div class="day event" onclick="showEvent('2. Apríl: Služby Božie so spoveďou a Večerou Pánovou o 18:00 (Zelený Štvrtok).')">2</div>
-                <div class="day event" onclick="showEvent('3. Apríl: Pašiové služby Božie o 9:00. Pamiatka umučenia Pána.')">3</div>
-                <div class="day">4</div>
-                <div class="day event" onclick="showEvent('5. Apríl: Slávnostné Služby Božie o 9:00 (Veľkonočná nedeľa).')">5</div>
-                <div class="day event" onclick="showEvent('6. Apríl: Veľkonočný pondelok - Služby Božie o 9:00.')">6</div>
-                <div class="day">7</div><div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div>
-                <div class="day event" onclick="showEvent('12. Apríl: Nedeľné Služby Božie o 9:00.')">12</div>
-            </div>
-            <div id="event-detail"> Kliknite na zlatý deň pre detaily. </div>
-        </div>
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
 
-        <div class="meetings-info">
-            <h3 style="margin-bottom: 1rem;">Pravidelné oznamy</h3>
-            <p style="color: var(--text-light);">Nedeľné Služby sa konajú každú nedeľu o 9:00 hod, súčasťou je aj detská besiedka. Počas týždňa prebiehajú stretnutia dorastu, mládeže a biblické hodiny podľa aktuálnych oznamov.</p>
-        </div>
-    </div>
-</section>
-
-<section id="aktualne">
-    <h2 class="section-title">Aktuálne oznamy</h2>
-    <div class="news-grid">
-        <div class="news-card">
-            <div class="news-content">
-                <span class="news-tag">Oznam</span>
-                <h3 class="news-title">40 dní pôstu s Božím slovom</h3>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">Nechajte sa premieňať Božím slovom aj počas 40-dňového pôstu pred Veľkou nocou.</p>
-            </div>
-        </div>
-        <div class="news-card">
-            <div class="news-content">
-                <span class="news-tag">Komunita</span>
-                <h3 class="news-title">WhatsApp zborová komunita</h3>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">Pridajte sa do našej komunity pre lepšiu informovanosť o aktuálnom dianí v zbore.</p>
-            </div>
-        </div>
-        <div class="news-card">
-            <div class="news-content">
-                <span class="news-tag">Médiá</span>
-                <h3 class="news-title">Nové číslo zborového časopisu</h3>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">V sekcii Dokumenty nájdete na stiahnutie najnovšie vydanie nášho časopisu.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="o-nas">
-    <h2 class="section-title">O nás</h2>
-    <div style="max-width: 800px; margin: 0 auto; text-align: center; color: var(--text-light);">
-        <p>Cirkevný zbor ECAV v Liptovskom Hrádku je spoločenstvom ľudí, ktorých spája viera v Ježiša Krista. Naša história je bohatá a pevne spätá s týmto regiónom, no hľadíme vpred s túžbou osloviť aj moderného človeka.</p>
-    </div>
-</section>
-
-<section id="kontakt">
-    <h2 class="section-title">Kontakt & Podpora</h2>
-    <div class="contact-grid">
-        <div class="info-card">
-            <h3>Sídlo a Údaje</h3>
-            <p>Hviezdoslavova 142, 033 01 Liptovský Hrádok</p>
-            <p style="margin-top: 10px;"><strong>IČO:</strong> 31910609</p>
-            <p><strong>DIČ:</strong> 2020583525</p>
-        </div>
-        <div class="info-card">
-            <h3>Podpora (Dary)</h3>
-            <p>Vaše milodary a cirkevné príspevky môžete posielať na náš účet:</p>
-            <div class="iban-box">SK12 0000 0000 1234 5678 9012</div>
-            <p style="font-size: 0.7rem; color: var(--text-light); margin-top: 5px; text-align: center;">Variabilný symbol: uveďte účel daru</p>
-        </div>
-        <div class="info-card">
-            <h3>Vedenie</h3>
-            <p><strong>Mgr. Michal Belanji</strong><br>Administrátor CZ | +421 918 828 303</p>
-            <p style="margin-top: 10px;"><strong>Ing. Ján Pavlík, PhD.</strong><br>Zborový dozorca | +421 903 175 627</p>
-        </div>
-    </div>
-</section>
-
-<footer style="text-align: center; padding: 3rem; background: #000; font-size: 0.8rem; color: var(--text-light);">
-    &copy; 2026 ECAV Liptovský Hrádok | Všetky práva vyhradené.
-</footer>
-
-<script>
-    function showEvent(text) {
-        const detail = document.getElementById('event-detail');
-        detail.innerHTML = text;
-        detail.style.display = 'block';
-    }
-</script>
-
+        window.addEventListener("scroll", reveal);
+        // Spustiť raz hneď po načítaní
+        reveal();
+    </script>
 </body>
 </html>
