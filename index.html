@@ -1,0 +1,1897 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dizajnový a funkčný HTML koncept webu Cirkevného zboru ECAV Liptovský Hrádok.">
+  <meta name="theme-color" content="#173d35">
+  <title>ECAV Liptovský Hrádok | Spoločenstvo viery</title>
+
+  <!-- Bootstrap 5.3.8: grid, responsive navbar/collapse, carousel, modal and utilities -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <!--
+    ECAV LIPTOVSKÝ HRÁDOK — FUNKČNÝ HTML KONCEPT
+    ------------------------------------------------
+    Účel: dizajnový prototyp bez databázy, pripravený na odovzdanie realizačnej firme.
+    Závislosti: Bootstrap 5.3.8 cez CDN; lokálne optimalizované fotografie v assets/images.
+    Dáta: ukážkovo uložené v JavaScripte a localStorage pre demo administráciu.
+
+    Verejné zdroje obsahu (overené 15. 7. 2026 cez indexované stránky pôvodného webu):
+    - https://www.ecavlh.sk/
+    - https://www.ecavlh.sk/aktualne
+    - https://www.ecavlh.sk/kontakt
+    - https://www.ecavlh.sk/deti
+    - https://www.ecavlh.sk/dospeli
+    - https://www.ecavlh.sk/dokumenty
+    - https://www.ecavlh.sk/minulost
+    - https://www.ecavlh.sk/obrady-a-suvisiace-sluzby
+
+    DÔLEŽITÉ PRE REALIZAČNÚ FIRMU:
+    1. Pred ostrým nasadením znova overiť osoby, telefónne čísla a pravidelné termíny.
+    2. Nahradiť localStorage databázou/CMS a zaviesť reálne prihlasovanie.
+    3. Dokumenty a galériu pripojiť k vybranému úložisku (Google Drive API / cloud storage).
+    4. Doplniť GDPR dokumentáciu, cookies podľa reálne nasadených služieb a antispam formulárov.
+    5. Bootstrap je použitý pre responzívnu navigáciu, carousel, modal a utility; vlastné CSS zachováva originálny vizuál.
+    6. Trvalé oznamy sú oddelené od časových aktualít vlastnosťou `persistent`.
+    7. WhatsApp a podpora zboru používajú centrálne odkazy v objekte SITE_CONFIG na konci súboru.
+    8. Fotografie sú lokálne súbory vhodné pre GitHub Pages; neskôr ich možno nahradiť URL z CMS alebo Google Apps Script API.
+  -->
+
+  <style>
+
+
+    /* Critical fallback for the first render if the Bootstrap CDN is temporarily unavailable. */
+    .carousel-item { display: none; position: relative; width: 100%; }
+    .carousel-item.active { display: block; }
+    .collapse:not(.show) { display: none; }
+    .position-relative { position: relative !important; }
+    .visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
+    .img-fluid { max-width: 100%; height: auto; }
+    .mx-auto { margin-inline: auto !important; }
+    @media (min-width: 992px) { .navbar-expand-lg .navbar-collapse { display: flex !important; } }
+    @media (min-width: 1200px) { .d-xl-inline-flex { display: inline-flex !important; } }
+
+
+    /* =========================================================
+       1. DESIGN TOKENS
+       ========================================================= */
+    :root {
+      --ink: #14211e;
+      --ink-soft: #4f625d;
+      --paper: #f6f4ed;
+      --paper-2: #ece9df;
+      --surface: rgba(255, 255, 255, 0.84);
+      --surface-solid: #ffffff;
+      --forest: #173d35;
+      --forest-2: #22584b;
+      --sage: #9fb9a9;
+      --gold: #c6a66a;
+      --gold-2: #e5cf9d;
+      --line: rgba(20, 33, 30, 0.13);
+      --danger: #9e3d3d;
+      --shadow-sm: 0 12px 30px rgba(20, 33, 30, 0.08);
+      --shadow-lg: 0 30px 90px rgba(20, 33, 30, 0.14);
+      --radius-sm: 14px;
+      --radius-md: 24px;
+      --radius-lg: 38px;
+      --container: 1180px;
+      --header-height: 78px;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 20px); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+    body.admin-open { overflow: hidden; }
+    button, input, textarea, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; }
+    img, svg { display: block; max-width: 100%; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1, h2, h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+    p:last-child { margin-bottom: 0; }
+    :focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+    [hidden] { display: none !important; }
+
+    .container { width: min(calc(100% - 40px), var(--container)); margin-inline: auto; }
+    .section { padding: 110px 0; position: relative; }
+    .section--compact { padding: 75px 0; }
+    .section--white { background: var(--surface-solid); }
+    .section--forest { color: #fff; background: var(--forest); }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--forest-2);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--gold); }
+    .section--forest .eyebrow { color: var(--gold-2); }
+    .section-heading { max-width: 720px; margin-bottom: 48px; }
+    .section-heading--center { margin-inline: auto; text-align: center; }
+    .section-heading--center .eyebrow::before { display: none; }
+    .section-title { margin-bottom: 18px; font-size: clamp(2.25rem, 5vw, 4.5rem); }
+    .section-lead { max-width: 670px; color: var(--ink-soft); font-size: 1.08rem; }
+    .section-heading--center .section-lead { margin-inline: auto; }
+    .section--forest .section-lead { color: rgba(255,255,255,.72); }
+
+    .button {
+      display: inline-flex;
+      min-height: 50px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 20px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--forest);
+      font-weight: 750;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .25s var(--ease), background .25s ease, box-shadow .25s ease;
+    }
+    .button:hover { transform: translateY(-2px); background: var(--forest-2); box-shadow: var(--shadow-sm); }
+    .button--gold { color: var(--ink); background: var(--gold-2); }
+    .button--gold:hover { background: #efdbaa; }
+    .button--ghost { color: var(--ink); border-color: var(--line); background: rgba(255,255,255,.55); }
+    .button--ghost:hover { background: #fff; }
+    .button--small { min-height: 40px; padding: 9px 15px; font-size: .86rem; }
+    .button--danger { background: var(--danger); }
+    .icon-button {
+      width: 44px;
+      height: 44px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(255,255,255,.75);
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .icon-button:hover { background: #fff; transform: translateY(-1px); }
+
+    /* =========================================================
+       2. HEADER
+       ========================================================= */
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 1000;
+      height: var(--header-height);
+      border-bottom: 1px solid transparent;
+      transition: background .25s ease, border-color .25s ease, backdrop-filter .25s ease;
+    }
+    .site-header.is-scrolled,
+    .site-header.menu-open {
+      border-color: var(--line);
+      background: rgba(246,244,237,.9);
+      backdrop-filter: blur(18px);
+    }
+    .header-inner {
+      height: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 30px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50% 50% 46% 54% / 55% 46% 54% 45%;
+      color: #fff;
+      background: var(--forest);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
+      font-family: Georgia, serif;
+      font-size: 1.35rem;
+    }
+    .brand-copy { line-height: 1.05; }
+    .brand-copy strong { display: block; font-family: Georgia, serif; font-size: 1rem; }
+    .brand-copy small { color: var(--ink-soft); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+    .main-nav { justify-self: center; }
+    .main-nav ul { display: flex; align-items: center; gap: 26px; margin: 0; padding: 0; list-style: none; }
+    .main-nav a {
+      position: relative;
+      padding: 10px 0 !important;
+      color: inherit !important;
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .main-nav a::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 4px;
+      left: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .25s var(--ease);
+    }
+    .main-nav a:hover::after,
+    .main-nav a.active::after { transform: scaleX(1); transform-origin: left; }
+    .header-actions { display: flex; align-items: center; gap: 9px; }
+    .menu-toggle { display: none; }
+
+    /* =========================================================
+       3. HERO — ABSTRAKTNÉ POZADIE BEZ OBRÁZKOV
+       ========================================================= */
+    .hero {
+      min-height: 780px;
+      display: grid;
+      align-items: center;
+      padding: calc(var(--header-height) + 70px) 0 70px;
+      isolation: isolate;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 25%, rgba(229,207,157,.88), transparent 27%),
+        radial-gradient(circle at 82% 17%, rgba(159,185,169,.68), transparent 27%),
+        linear-gradient(135deg, #f8f2e5 0%, #e9eee6 50%, #f1e9dc 100%);
+    }
+    .hero[data-theme="dawn"] {
+      background:
+        radial-gradient(circle at 18% 25%, rgba(236,190,143,.78), transparent 29%),
+        radial-gradient(circle at 82% 17%, rgba(179,193,180,.75), transparent 29%),
+        linear-gradient(135deg, #fbf0df 0%, #e8eee9 50%, #eee2d3 100%);
+    }
+    .hero[data-theme="forest"] {
+      color: #fff;
+      background:
+        radial-gradient(circle at 16% 30%, rgba(198,166,106,.38), transparent 28%),
+        radial-gradient(circle at 84% 10%, rgba(110,153,132,.4), transparent 28%),
+        linear-gradient(135deg, #0d2924 0%, #173d35 45%, #264f43 100%);
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      border: 1px solid rgba(23,61,53,.14);
+      border-radius: 50%;
+      animation: float 12s ease-in-out infinite;
+    }
+    .hero::before { width: 560px; height: 560px; right: -170px; top: 120px; }
+    .hero::after { width: 320px; height: 320px; left: -110px; bottom: 70px; animation-delay: -5s; }
+    .hero-shape {
+      position: absolute;
+      z-index: -1;
+      right: 8%;
+      bottom: 8%;
+      width: min(34vw, 460px);
+      aspect-ratio: 1;
+      border-radius: 62% 38% 53% 47% / 42% 55% 45% 58%;
+      background: linear-gradient(145deg, rgba(255,255,255,.56), rgba(23,61,53,.1));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), var(--shadow-lg);
+      transform: rotate(-8deg);
+    }
+    .hero-shape::before {
+      content: "";
+      position: absolute;
+      inset: 17%;
+      border: 1px solid rgba(23,61,53,.2);
+      border-radius: inherit;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(330px, .55fr);
+      align-items: end;
+      gap: 70px;
+    }
+    .hero-copy { max-width: 780px; }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 23px;
+      padding: 8px 12px;
+      border: 1px solid rgba(23,61,53,.13);
+      border-radius: 999px;
+      background: rgba(255,255,255,.45);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+    }
+    .hero[data-theme="forest"] .hero-kicker { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); }
+    .hero-title { max-width: 850px; margin-bottom: 25px; font-size: clamp(3.4rem, 8vw, 7.5rem); }
+    .hero-title em { color: var(--forest-2); font-weight: 400; }
+    .hero[data-theme="forest"] .hero-title em { color: var(--gold-2); }
+    .hero-text { max-width: 650px; margin-bottom: 34px; color: var(--ink-soft); font-size: clamp(1.05rem, 2vw, 1.25rem); }
+    .hero[data-theme="forest"] .hero-text { color: rgba(255,255,255,.75); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .service-card {
+      position: relative;
+      z-index: 2;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.68);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(18px);
+    }
+    .hero[data-theme="forest"] .service-card { border-color: rgba(255,255,255,.15); color: #fff; background: rgba(255,255,255,.08); }
+    .service-card__label { color: var(--forest-2); font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .hero[data-theme="forest"] .service-card__label { color: var(--gold-2); }
+    .service-card__time { margin: 8px 0 3px; font-family: Georgia, serif; font-size: 3.6rem; line-height: 1; }
+    .service-card__meta { color: var(--ink-soft); }
+    .hero[data-theme="forest"] .service-card__meta { color: rgba(255,255,255,.7); }
+    .service-card__divider { height: 1px; margin: 22px 0; background: var(--line); }
+    .service-card__next { display: grid; grid-template-columns: 54px 1fr; gap: 14px; align-items: center; }
+    .date-badge { display: grid; place-items: center; width: 54px; height: 60px; border-radius: 14px; color: #fff; background: var(--forest); }
+    .date-badge strong { font-size: 1.2rem; line-height: 1; }
+    .date-badge span { font-size: .64rem; letter-spacing: .09em; text-transform: uppercase; }
+
+    /* =========================================================
+       4. QUICK LINKS + ANNOUNCEMENTS
+       ========================================================= */
+    .quick-links { position: relative; z-index: 4; margin-top: -34px; }
+    .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-lg); overflow: hidden; }
+    .quick-link { width: 100%; display: grid; grid-template-columns: 46px 1fr; gap: 15px; align-items: center; padding: 24px; border: 0; border-right: 1px solid var(--line); color: inherit; background: transparent; font: inherit; text-align: left; text-decoration: none; cursor: pointer; transition: background .2s ease; }
+    .quick-link:last-child { border-right: 0; }
+    .quick-link:hover { background: #faf8f2; }
+    .quick-icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; color: var(--forest); background: var(--paper-2); font-size: 1.15rem; }
+    .quick-link strong { display: block; font-size: .91rem; }
+    .quick-link small { color: var(--ink-soft); }
+
+    .announcements-layout { display: grid; grid-template-columns: .74fr 1.26fr; gap: 50px; align-items: start; }
+    .featured-note {
+      position: sticky;
+      top: calc(var(--header-height) + 30px);
+      padding: 32px;
+      border-radius: var(--radius-md);
+      color: #fff;
+      background: var(--forest);
+      overflow: hidden;
+    }
+    .featured-note::after { content: ""; position: absolute; width: 180px; height: 180px; right: -55px; bottom: -65px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; }
+    .featured-note__tag { color: var(--gold-2); font-size: .72rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .featured-note h3 { margin: 13px 0 18px; font-size: 2.1rem; }
+    .featured-note p { color: rgba(255,255,255,.74); }
+    .featured-note a { display: inline-flex; margin-top: 22px; color: var(--gold-2); font-weight: 800; text-decoration: none; }
+    .announcement-list { display: grid; gap: 14px; }
+    .announcement-card {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 22px;
+      align-items: center;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.72);
+      transition: transform .2s var(--ease), box-shadow .2s ease;
+    }
+    .announcement-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .announcement-card__category { color: var(--forest-2); font-size: .72rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .announcement-card h3 { margin: 2px 0 7px; font-size: 1.35rem; }
+    .announcement-card p { margin-bottom: 0; color: var(--ink-soft); font-size: .92rem; }
+    .announcement-card__date { color: var(--ink-soft); font-size: .8rem; }
+    .arrow-link { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--paper-2); text-decoration: none; }
+    .empty-state { padding: 28px; border: 1px dashed var(--line); border-radius: var(--radius-sm); color: var(--ink-soft); text-align: center; }
+
+    /* Trvalé oznamy nie sú viazané na dátum a zostávajú stále po ruke. */
+    .permanent-section { padding-top: 78px; }
+    .permanent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+    .permanent-card {
+      min-height: 245px;
+      display: flex;
+      flex-direction: column;
+      padding: 25px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow-sm);
+      transition: transform .22s var(--ease), border-color .22s ease, box-shadow .22s ease;
+    }
+    .permanent-card:hover { transform: translateY(-3px); border-color: rgba(23,61,53,.28); box-shadow: var(--shadow-lg); }
+    .permanent-card__top { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 28px; }
+    .permanent-card__icon { width: 45px; height: 45px; display: grid; place-items: center; border-radius: 14px; color: #fff; background: var(--forest); font-size: 1.1rem; }
+    .permanent-card__badge { padding: 5px 9px; border-radius: 999px; color: var(--forest-2); background: var(--paper-2); font-size: .65rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .permanent-card h3 { margin-bottom: 10px; font-size: 1.42rem; }
+    .permanent-card p { margin-bottom: 22px; color: var(--ink-soft); font-size: .9rem; }
+    .permanent-card a { margin-top: auto; color: var(--forest-2); font-size: .85rem; font-weight: 850; text-decoration: none; }
+
+    .community-tools {
+      display: grid;
+      grid-template-columns: 1.25fr repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 34px;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      color: #fff;
+      background: var(--forest);
+      box-shadow: var(--shadow-lg);
+    }
+    .community-tool {
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+    }
+    .community-tool--primary { background: linear-gradient(145deg, rgba(198,166,106,.28), rgba(255,255,255,.07)); }
+    .community-tool__icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 22px; border-radius: 13px; color: var(--forest); background: var(--gold-2); }
+    .community-tool h3 { margin-bottom: 8px; font-size: 1.25rem; }
+    .community-tool p { margin-bottom: 18px; color: rgba(255,255,255,.66); font-size: .84rem; }
+    .community-tool a,
+    .community-tool button { margin-top: auto; padding: 0; border: 0; color: var(--gold-2); background: transparent; font-size: .82rem; font-weight: 850; text-align: left; text-decoration: none; cursor: pointer; }
+    .community-tool button:hover,
+    .community-tool a:hover { color: #fff; }
+
+    .checkbox-row { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+    .checkbox-row input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--forest); }
+    .checkbox-row span { color: var(--ink-soft); font-size: .8rem; }
+    .checkbox-row strong { display: block; color: var(--ink); font-size: .82rem; }
+
+    /* =========================================================
+       5. CALENDAR
+       ========================================================= */
+    .calendar-shell { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr); overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius-lg); background: rgba(255,255,255,.06); box-shadow: 0 30px 70px rgba(0,0,0,.14); }
+    .calendar-main { padding: 34px; border-right: 1px solid rgba(255,255,255,.12); }
+    .calendar-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 24px; }
+    .calendar-title { margin: 0; font-size: 2rem; }
+    .calendar-controls { display: flex; gap: 8px; }
+    .calendar-controls .icon-button { color: #fff; border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); }
+    .calendar-weekdays,
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .calendar-weekdays span { padding: 10px; color: rgba(255,255,255,.48); font-size: .7rem; font-weight: 850; letter-spacing: .08em; text-align: center; text-transform: uppercase; }
+    .calendar-day {
+      min-height: 82px;
+      position: relative;
+      padding: 10px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      border-right: 1px solid rgba(255,255,255,.1);
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+    .calendar-day:nth-child(7n) { border-right: 0; }
+    .calendar-day:hover { background: rgba(255,255,255,.07); }
+    .calendar-day.is-outside { color: rgba(255,255,255,.24); }
+    .calendar-day.is-today { box-shadow: inset 0 0 0 2px var(--gold); }
+    .calendar-day.is-selected { background: rgba(198,166,106,.18); }
+    .calendar-day__number { font-weight: 750; }
+    .calendar-day__dots { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+    .calendar-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-2); }
+    .calendar-dot--custom { background: #b7d9cb; }
+    .events-panel { padding: 34px; background: rgba(0,0,0,.08); }
+    .events-panel h3 { margin-bottom: 7px; font-size: 1.75rem; }
+    .events-panel__subtitle { margin-bottom: 24px; color: rgba(255,255,255,.58); }
+    .event-feed { display: grid; gap: 13px; max-height: 510px; overflow: auto; padding-right: 5px; }
+    .event-card { padding: 18px; border: 1px solid rgba(255,255,255,.11); border-radius: 16px; background: rgba(255,255,255,.07); }
+    .event-card__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .event-card__date { color: var(--gold-2); font-size: .72rem; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
+    .event-card__type { padding: 3px 7px; border-radius: 999px; color: rgba(255,255,255,.7); background: rgba(255,255,255,.09); font-size: .66rem; }
+    .event-card h4 { margin-bottom: 5px; font-size: 1rem; }
+    .event-card p { color: rgba(255,255,255,.58); font-size: .84rem; }
+
+    /* =========================================================
+       6. WEEKLY PROGRAM + LIFE
+       ========================================================= */
+    .program-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .program-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 22px;
+      padding: 27px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: #fff;
+    }
+    .program-day { color: var(--forest-2); font-size: .72rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    .program-time { display: block; margin-top: 6px; font-family: Georgia, serif; font-size: 1.65rem; }
+    .program-item h3 { margin-bottom: 8px; font-size: 1.45rem; }
+    .program-item p { color: var(--ink-soft); font-size: .92rem; }
+    .program-note { margin-top: 20px; color: var(--ink-soft); font-size: .83rem; }
+
+    .life-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .life-card {
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+      overflow: hidden;
+    }
+    .life-card::before { content: attr(data-number); position: absolute; top: 20px; right: 24px; color: rgba(255,255,255,.11); font-family: Georgia, serif; font-size: 5rem; line-height: 1; }
+    .life-card__icon { width: 46px; height: 46px; display: grid; place-items: center; margin-bottom: auto; border-radius: 50%; color: var(--forest); background: var(--gold-2); }
+    .life-card h3 { margin: 30px 0 10px; font-size: 1.65rem; }
+    .life-card p { color: rgba(255,255,255,.64); font-size: .92rem; }
+
+    /* =========================================================
+       7. PRACTICAL, DOCUMENTS, GALLERY, ABOUT, CONTACT
+       ========================================================= */
+    .practical-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+    .practical-card { padding: 25px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: rgba(255,255,255,.72); }
+    .practical-card__icon { margin-bottom: 35px; color: var(--forest-2); font-size: 1.35rem; }
+    .practical-card h3 { margin-bottom: 9px; font-size: 1.3rem; }
+    .practical-card p { color: var(--ink-soft); font-size: .88rem; }
+    .practical-card a { display: inline-flex; margin-top: 15px; color: var(--forest-2); font-weight: 800; text-decoration: none; }
+
+    .documents-shell { display: grid; grid-template-columns: .65fr 1.35fr; gap: 48px; align-items: start; }
+    .document-list { display: grid; gap: 12px; }
+    .document-item { display: grid; grid-template-columns: 48px 1fr auto; gap: 15px; align-items: center; padding: 18px; border: 1px solid var(--line); border-radius: 15px; background: #fff; }
+    .document-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 13px; color: var(--forest); background: var(--paper-2); font-weight: 850; }
+    .document-item strong { display: block; }
+    .document-item small { color: var(--ink-soft); }
+    .document-item a { color: var(--forest-2); font-weight: 800; text-decoration: none; }
+
+    .gallery-grid { display: grid; grid-template-columns: 1.15fr .85fr .85fr; grid-auto-rows: 210px; gap: 14px; }
+    .gallery-card { position: relative; border-radius: 20px; overflow: hidden; background: var(--paper-2); }
+    .gallery-card:first-child { grid-row: span 2; }
+    .gallery-art { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(135deg, #d8c29b, #9fb9a9); }
+    .gallery-art::before,
+    .gallery-art::after { content: ""; position: absolute; border-radius: 50%; filter: blur(1px); }
+    .gallery-art::before { width: 70%; aspect-ratio: 1; left: -20%; top: 18%; background: rgba(255,255,255,.38); }
+    .gallery-art::after { width: 60%; aspect-ratio: 1; right: -16%; top: -18%; border: 1px solid rgba(23,61,53,.3); }
+    .gallery-card:nth-child(2) .gallery-art { background: linear-gradient(135deg, #9cae9e, #e4d0ab); }
+    .gallery-card:nth-child(3) .gallery-art { background: linear-gradient(135deg, #263f39, #bfa471); }
+    .gallery-card:nth-child(4) .gallery-art { background: linear-gradient(135deg, #e8ded0, #8ca695); }
+    .gallery-overlay { position: absolute; inset: auto 0 0; padding: 48px 20px 18px; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.62)); }
+    .gallery-overlay strong { display: block; }
+    .gallery-overlay small { color: rgba(255,255,255,.7); }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+    .about-art { min-height: 520px; position: relative; border-radius: var(--radius-lg); background: linear-gradient(145deg, #d7c7a8, #9bb3a4 52%, #315448); overflow: hidden; }
+    .about-art::before { content: ""; position: absolute; width: 70%; aspect-ratio: 1; left: -20%; top: 10%; border-radius: 50%; background: rgba(255,255,255,.22); }
+    .about-art::after { content: ""; position: absolute; width: 55%; aspect-ratio: 1; right: -12%; bottom: -6%; border: 1px solid rgba(255,255,255,.34); border-radius: 48% 52% 60% 40%; transform: rotate(18deg); }
+    .about-quote { position: absolute; right: 24px; bottom: 24px; left: 24px; padding: 25px; border-radius: 18px; color: #fff; background: rgba(15,42,36,.74); backdrop-filter: blur(14px); }
+    .about-quote p { font-family: Georgia, serif; font-size: 1.35rem; line-height: 1.35; }
+    .about-copy p { color: var(--ink-soft); }
+    .about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 30px; }
+    .about-stat { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+    .about-stat strong { display: block; font-family: Georgia, serif; font-size: 1.5rem; }
+    .about-stat small { color: var(--ink-soft); }
+
+    .contact-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 55px; }
+    .contact-card { padding: 32px; border-radius: var(--radius-md); color: #fff; background: var(--forest); }
+    .contact-card h3 { margin-bottom: 24px; font-size: 2rem; }
+    .contact-row { display: grid; grid-template-columns: 34px 1fr; gap: 14px; margin-top: 20px; }
+    .contact-row span:first-child { color: var(--gold-2); }
+    .contact-row a { color: #fff; text-decoration: none; }
+    .contact-map {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      margin-top: 28px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 18px;
+      background:
+        linear-gradient(30deg, transparent 48%, rgba(255,255,255,.08) 49%, rgba(255,255,255,.08) 51%, transparent 52%) 0 0 / 50px 50px,
+        linear-gradient(-30deg, transparent 48%, rgba(255,255,255,.06) 49%, rgba(255,255,255,.06) 51%, transparent 52%) 0 0 / 50px 50px,
+        rgba(255,255,255,.04);
+      text-align: center;
+    }
+    .contact-map a { color: var(--gold-2); font-weight: 800; }
+    .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .team-card { padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff; }
+    .team-avatar { width: 52px; height: 52px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 50%; color: #fff; background: var(--forest); font-family: Georgia, serif; font-size: 1.15rem; }
+    .team-card h3 { margin-bottom: 4px; font-size: 1.25rem; }
+    .team-card p { margin-bottom: 12px; color: var(--ink-soft); font-size: .84rem; }
+    .team-card a { display: block; color: var(--forest-2); font-size: .85rem; font-weight: 750; text-decoration: none; }
+
+    /* =========================================================
+       8. FOOTER
+       ========================================================= */
+    .site-footer { padding: 70px 0 25px; color: rgba(255,255,255,.68); background: #0f2823; }
+    .footer-grid { display: grid; grid-template-columns: 1.2fr .7fr .7fr .9fr; gap: 45px; }
+    .footer-brand .brand { color: #fff; }
+    .footer-brand .brand-copy small { color: rgba(255,255,255,.5); }
+    .footer-brand p { max-width: 340px; margin-top: 22px; }
+    .footer-col h3 { margin-bottom: 20px; color: #fff; font-family: inherit; font-size: .77rem; letter-spacing: .12em; text-transform: uppercase; }
+    .footer-col a { display: block; margin: 10px 0; color: rgba(255,255,255,.68); text-decoration: none; }
+    .footer-col a:hover { color: var(--gold-2); }
+    .footer-bottom { display: flex; justify-content: space-between; gap: 20px; margin-top: 55px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.1); font-size: .78rem; }
+
+    /* =========================================================
+       9. DEMO ADMIN PANEL
+       ========================================================= */
+    .admin-backdrop { position: fixed; inset: 0; z-index: 1900; opacity: 0; pointer-events: none; background: rgba(6,20,17,.58); backdrop-filter: blur(4px); transition: opacity .25s ease; }
+    .admin-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .admin-panel {
+      position: fixed;
+      z-index: 2000;
+      top: 0;
+      right: 0;
+      width: min(560px, 100%);
+      height: 100dvh;
+      padding: 26px;
+      background: #f7f5ef;
+      box-shadow: -20px 0 80px rgba(0,0,0,.2);
+      overflow: auto;
+      transform: translateX(105%);
+      transition: transform .35s var(--ease);
+    }
+    .admin-panel.is-open { transform: translateX(0); }
+    .admin-header { display: flex; align-items: start; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+    .admin-header h2 { margin-bottom: 7px; font-size: 2rem; }
+    .admin-header p { color: var(--ink-soft); font-size: .84rem; }
+    .admin-demo-alert { margin-bottom: 20px; padding: 13px 15px; border: 1px solid #ead29d; border-radius: 12px; color: #694e17; background: #fff4d7; font-size: .8rem; }
+    .admin-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 20px; padding: 5px; border-radius: 14px; background: var(--paper-2); }
+    .admin-tab { padding: 10px; border: 0; border-radius: 10px; color: var(--ink-soft); background: transparent; font-weight: 750; cursor: pointer; }
+    .admin-tab.is-active { color: var(--ink); background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.06); }
+    .admin-view { display: none; }
+    .admin-view.is-active { display: block; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+    .field { display: grid; gap: 6px; }
+    .field--full { grid-column: 1 / -1; }
+    .field label { font-size: .76rem; font-weight: 800; }
+    .field input,
+    .field textarea,
+    .field select { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: #fff; }
+    .field textarea { min-height: 105px; resize: vertical; }
+    .form-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .admin-items { display: grid; gap: 10px; margin-top: 22px; }
+    .admin-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    .admin-item strong { display: block; font-size: .88rem; }
+    .admin-item small { color: var(--ink-soft); }
+    .admin-item__actions { display: flex; gap: 6px; }
+    .admin-mini-button { padding: 6px 9px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: .72rem; font-weight: 750; cursor: pointer; }
+    .theme-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .theme-option { min-height: 100px; padding: 12px; border: 2px solid transparent; border-radius: 14px; cursor: pointer; }
+    .theme-option.is-active { border-color: var(--forest); }
+    .theme-option[data-theme-choice="default"] { background: linear-gradient(135deg, #f4dfb8, #b9cebf); }
+    .theme-option[data-theme-choice="dawn"] { background: linear-gradient(135deg, #f2c797, #b6c8bb); }
+    .theme-option[data-theme-choice="forest"] { color: #fff; background: linear-gradient(135deg, #0d2924, #315d4e); }
+    .theme-option strong { display: block; margin-top: 47px; font-size: .78rem; }
+    .toast { position: fixed; z-index: 3000; right: 22px; bottom: 22px; max-width: 360px; padding: 14px 18px; border-radius: 12px; color: #fff; background: var(--forest); box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transform: translateY(20px); transition: .25s var(--ease); }
+    .toast.is-visible { opacity: 1; transform: translateY(0); }
+
+
+
+    /* =========================================================
+       9A. BOOTSTRAP 5 + PHOTOGRAPHY LAYER
+       Bootstrap handles components and responsive behaviour;
+       these styles preserve the bespoke ECAV visual identity.
+       ========================================================= */
+    .navbar-brand { color: inherit; }
+    .nav-link { color: inherit; }
+    .site-header:not(.is-scrolled):not(.menu-open) { color: #fff; }
+    .site-header:not(.is-scrolled):not(.menu-open) .brand-copy small { color: rgba(255,255,255,.72); }
+    .site-header:not(.is-scrolled):not(.menu-open) .brand-mark { background: rgba(15,40,35,.76); backdrop-filter: blur(12px); }
+    .site-header:not(.is-scrolled):not(.menu-open) .icon-button { color: #fff; border-color: rgba(255,255,255,.35); background: rgba(15,40,35,.34); }
+    .site-header .navbar-toggler:focus { box-shadow: 0 0 0 .22rem rgba(198,166,106,.34); }
+
+    .hero {
+      --hero-overlay-a: rgba(8,25,22,.76);
+      --hero-overlay-b: rgba(8,25,22,.28);
+      position: relative;
+      color: #fff;
+      background: #173d35;
+    }
+    .hero[data-theme="dawn"] { --hero-overlay-a: rgba(76,42,15,.66); --hero-overlay-b: rgba(32,45,34,.22); color: #fff; }
+    .hero[data-theme="forest"] { --hero-overlay-a: rgba(5,24,20,.9); --hero-overlay-b: rgba(7,35,29,.52); color: #fff; }
+    .hero-carousel { position: absolute; inset: 0; z-index: -5; }
+    .hero-carousel .carousel-inner,
+    .hero-carousel .carousel-item { height: 100%; }
+    .hero-media { width: 100%; height: 100%; object-fit: cover; transform: scale(1.025); }
+    .hero-carousel .carousel-item:nth-child(1) .hero-media { object-position: center 60%; }
+    .hero-carousel .carousel-item:nth-child(2) .hero-media { object-position: center 52%; }
+    .hero-carousel .carousel-item:nth-child(3) .hero-media { object-position: center 42%; }
+    .hero-carousel .carousel-item:nth-child(4) .hero-media { object-position: center 53%; }
+    .hero::before {
+      inset: 0;
+      width: auto;
+      height: auto;
+      right: 0;
+      top: 0;
+      z-index: -3;
+      border: 0;
+      border-radius: 0;
+      background: linear-gradient(90deg, var(--hero-overlay-a) 0%, rgba(9,27,23,.56) 46%, var(--hero-overlay-b) 100%);
+      animation: none;
+    }
+    .hero::after {
+      inset: 0;
+      width: auto;
+      height: auto;
+      left: 0;
+      bottom: 0;
+      z-index: -2;
+      border: 0;
+      border-radius: 0;
+      background: linear-gradient(180deg, rgba(8,23,20,.3) 0%, transparent 28%, rgba(8,23,20,.56) 100%);
+      animation: none;
+    }
+    .hero-shape { z-index: -1; opacity: .38; border: 1px solid rgba(255,255,255,.23); background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(229,207,157,.08)); }
+    .hero-shape::before { border-color: rgba(255,255,255,.22); }
+    .hero-title { text-shadow: 0 4px 34px rgba(0,0,0,.35); }
+    .hero-title em { color: var(--gold-2); }
+    .hero-text { color: rgba(255,255,255,.82); text-shadow: 0 2px 16px rgba(0,0,0,.28); }
+    .hero-kicker { color: #fff; border-color: rgba(255,255,255,.24); background: rgba(15,40,35,.28); }
+    .hero .button--ghost { color: #fff; border-color: rgba(255,255,255,.42); background: rgba(255,255,255,.1); backdrop-filter: blur(10px); }
+    .hero .button--ghost:hover { color: var(--ink); background: #fff; }
+    .service-card,
+    .hero[data-theme="forest"] .service-card { border-color: rgba(255,255,255,.2); color: #fff; background: rgba(15,40,35,.66); }
+    .service-card__label,
+    .hero[data-theme="forest"] .service-card__label { color: var(--gold-2); }
+    .service-card__meta,
+    .hero[data-theme="forest"] .service-card__meta { color: rgba(255,255,255,.72); }
+    .service-card__divider { background: rgba(255,255,255,.18); }
+    .hero-carousel .carousel-indicators { right: auto; left: 50%; bottom: 28px; width: auto; margin: 0; transform: translateX(-50%); }
+    .hero-carousel .carousel-indicators [data-bs-target] { width: 34px; height: 3px; margin-inline: 5px; border: 0; border-radius: 999px; background-color: rgba(255,255,255,.78); }
+    .hero-carousel-control { width: 7%; opacity: 0; transition: opacity .25s ease; }
+    .hero:hover .hero-carousel-control { opacity: .65; }
+
+    .photo-story { min-height: 660px; display: grid; align-items: end; position: relative; isolation: isolate; overflow: hidden; color: #fff; }
+    .photo-story > img { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+    .photo-story__overlay { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, rgba(9,27,23,.12) 15%, rgba(9,27,23,.9) 100%); }
+    .photo-story__content { padding-block: 90px; }
+    .photo-story .eyebrow { color: var(--gold-2); }
+    .photo-story blockquote { max-width: 880px; margin: 0 0 20px; font-family: Georgia, serif; font-size: clamp(2.3rem, 5vw, 5.1rem); line-height: 1.05; letter-spacing: -.035em; }
+    .photo-story p { max-width: 650px; color: rgba(255,255,255,.75); font-size: 1.05rem; }
+
+    #zivot-zboru { position: relative; overflow: hidden; }
+    #zivot-zboru::before { content: ""; position: absolute; inset: 0; opacity: .12; background: url("assets/images/kostol-interier-lod.webp") center / cover; }
+    #zivot-zboru > .container { position: relative; z-index: 1; }
+
+    .gallery-card { padding: 0; border: 0; color: inherit; text-align: left; cursor: zoom-in; }
+    .gallery-art { width: 100%; height: 100%; object-fit: cover; transition: transform .65s var(--ease), filter .4s ease; }
+    .gallery-art::before, .gallery-art::after { display: none; }
+    .gallery-card:hover .gallery-art { transform: scale(1.055); filter: saturate(1.08) contrast(1.03); }
+    .gallery-overlay { display: block; pointer-events: none; }
+    .gallery-modal .modal-content { border: 0; border-radius: 24px; background: #f7f5ef; box-shadow: var(--shadow-lg); }
+    .gallery-modal .modal-body img { max-height: 78vh; object-fit: contain; }
+
+    .about-art { background: #173d35; }
+    .about-art > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .about-art::before { z-index: 1; background: linear-gradient(180deg, transparent 35%, rgba(8,28,23,.52) 100%); border-radius: 0; width: auto; aspect-ratio: auto; inset: 0; }
+    .about-art::after { z-index: 2; }
+    .about-quote { z-index: 3; }
+
+    .contact-map { position: relative; isolation: isolate; overflow: hidden; background: url("assets/images/kostol-exterier.webp") center 60% / cover; }
+    .contact-map::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(8,28,23,.72); }
+
+    .theme-option[data-theme-choice="default"] { background: linear-gradient(135deg, rgba(15,40,35,.24), rgba(229,207,157,.48)), url("assets/images/kostol-exterier.webp") center / cover; }
+    .theme-option[data-theme-choice="dawn"] { background: linear-gradient(135deg, rgba(102,55,18,.35), rgba(229,207,157,.28)), url("assets/images/kostol-interier-kazatelnica.webp") center / cover; }
+    .theme-option[data-theme-choice="forest"] { background: linear-gradient(135deg, rgba(5,24,20,.82), rgba(23,61,53,.64)), url("assets/images/konfirmacia-2026.webp") center / cover; }
+
+    @media (max-width: 820px) {
+      .main-nav.collapse { display: none; position: fixed; inset: var(--header-height) 0 auto; padding: 15px 20px 25px; border-bottom: 1px solid var(--line); background: rgba(246,244,237,.98); color: var(--ink); opacity: 1; pointer-events: auto; transform: none; }
+      .main-nav.collapse.show,
+      .main-nav.collapsing { display: block; }
+      .main-nav.collapsing { height: auto !important; overflow: hidden; }
+      .main-nav .navbar-nav { align-items: stretch !important; }
+      .hero { min-height: 760px; }
+      .hero::before { background: linear-gradient(180deg, rgba(7,25,21,.72) 0%, rgba(7,25,21,.44) 55%, rgba(7,25,21,.82) 100%); }
+      .hero-carousel .carousel-indicators { bottom: 16px; }
+      .hero-carousel-control { display: none; }
+      .photo-story { min-height: 560px; }
+    }
+
+
+    /* =========================================================
+       10. REVEAL + RESPONSIVE
+       ========================================================= */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .75s var(--ease), transform .75s var(--ease); }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-18px) rotate(4deg); } }
+
+    @media (max-width: 1050px) {
+      .main-nav ul { gap: 16px; }
+      .header-actions .button { display: none; }
+      .hero-grid, .announcements-layout, .documents-shell, .about-grid, .contact-grid { gap: 34px; }
+      .quick-grid { grid-template-columns: repeat(2, 1fr); }
+      .quick-link:nth-child(2) { border-right: 0; }
+      .quick-link:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .life-grid { grid-template-columns: repeat(2, 1fr); }
+      .permanent-grid, .community-tools { grid-template-columns: repeat(2, 1fr); }
+      .practical-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1.2fr 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 820px) {
+      :root { --header-height: 70px; }
+      .container { width: min(calc(100% - 28px), var(--container)); }
+      .section { padding: 82px 0; }
+      .header-inner { grid-template-columns: 1fr auto; }
+
+      .main-nav ul { display: grid; gap: 0; }
+      .main-nav a { display: block; padding: 13px 4px; }
+      .header-actions { justify-self: end; }
+      .menu-toggle { display: inline-grid; }
+      .hero { min-height: auto; padding-top: calc(var(--header-height) + 65px); }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-shape { width: 56vw; right: -8%; bottom: 20%; opacity: .5; }
+      .service-card { max-width: 460px; }
+      .announcements-layout,
+      .calendar-shell,
+      .documents-shell,
+      .about-grid,
+      .contact-grid { grid-template-columns: 1fr; }
+      .featured-note { position: relative; top: 0; }
+      .calendar-main { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.12); }
+      .program-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-card:first-child { grid-column: 1 / -1; grid-row: auto; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      .brand-copy small { display: none; }
+      .header-actions .icon-button:not(.menu-toggle) { display: none; }
+      .hero-title { font-size: clamp(3rem, 17vw, 5rem); }
+      .hero-actions { display: grid; }
+      .hero-actions .button { width: 100%; }
+      .quick-grid { grid-template-columns: 1fr; }
+      .quick-link { border-right: 0; border-bottom: 1px solid var(--line); }
+      .quick-link:last-child { border-bottom: 0; }
+      .announcement-card { grid-template-columns: 1fr auto; }
+      .announcement-card__category { grid-column: 1 / -1; }
+      .announcement-card__date { display: none; }
+      .calendar-main, .events-panel { padding: 22px 16px; }
+      .calendar-day { min-height: 62px; padding: 7px; }
+      .calendar-day__dots { margin-top: 6px; }
+      .program-item { grid-template-columns: 1fr; gap: 10px; }
+      .life-grid, .permanent-grid, .community-tools, .practical-grid, .team-grid, .about-stats { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 230px; }
+      .gallery-card:first-child { grid-column: auto; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-brand { grid-column: auto; }
+      .footer-bottom { flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field--full { grid-column: auto; }
+      .theme-options { grid-template-columns: 1fr; }
+      .admin-panel { padding: 20px 15px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body class="bootstrap-concept">
+  <a href="#main" style="position:absolute;left:-9999px;top:10px;z-index:9999;padding:10px;background:#fff;">Preskočiť na obsah</a>
+
+  <header class="site-header navbar navbar-expand-lg p-0" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand navbar-brand m-0" href="#domov" aria-label="ECAV Liptovský Hrádok — domov">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span class="brand-copy">
+          <strong>ECAV Liptovský Hrádok</strong>
+          <small>Cirkevný zbor</small>
+        </span>
+      </a>
+
+      <nav class="main-nav collapse navbar-collapse" id="mainNav" aria-label="Hlavná navigácia">
+        <ul class="navbar-nav align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#aktuality">Aktuality</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kalendar">Kalendár</a></li>
+          <li class="nav-item"><a class="nav-link" href="#program">Stretnutia</a></li>
+          <li class="nav-item"><a class="nav-link" href="#zivot-zboru">Život zboru</a></li>
+          <li class="nav-item"><a class="nav-link" href="#dokumenty">Dokumenty</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-button" id="adminOpenButton" type="button" aria-label="Otvoriť demo administráciu" title="Demo administrácia">⚙</button>
+        <a class="button button--small d-none d-xl-inline-flex" href="#program">Najbližší program</a>
+        <button class="icon-button menu-toggle navbar-toggler" id="menuToggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-expanded="false" aria-controls="mainNav" aria-label="Otvoriť menu"><span aria-hidden="true">☰</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="domov" data-theme="default">
+      <div id="heroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" data-bs-interval="6500" data-bs-pause="false" aria-hidden="true">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Exteriér kostola"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Interiér kostola"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Konfirmácia"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" aria-label="Kazateľnica a oltár"></button>
+        </div>
+        <div class="carousel-inner h-100">
+          <div class="carousel-item active h-100"><img class="hero-media" src="assets/images/kostol-exterier.webp" alt="" fetchpriority="high"></div>
+          <div class="carousel-item h-100"><img class="hero-media" src="assets/images/kostol-interier-lod.webp" alt="" loading="eager"></div>
+          <div class="carousel-item h-100"><img class="hero-media" src="assets/images/konfirmacia-2026.webp" alt="" loading="lazy"></div>
+          <div class="carousel-item h-100"><img class="hero-media" src="assets/images/kostol-interier-kazatelnica.webp" alt="" loading="lazy"></div>
+        </div>
+        <button class="carousel-control-prev hero-carousel-control" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" tabindex="-1"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Predchádzajúca fotografia</span></button>
+        <button class="carousel-control-next hero-carousel-control" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" tabindex="-1"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Nasledujúca fotografia</span></button>
+      </div>
+      <div class="hero-shape" aria-hidden="true"></div>
+      <div class="container hero-grid position-relative">
+        <div class="hero-copy">
+          <div class="hero-kicker reveal">Evanjelický a. v. cirkevný zbor</div>
+          <h1 class="hero-title reveal">Miesto pre <em>vieru, nádej</em> a spoločenstvo.</h1>
+          <p class="hero-text reveal">Sme spoločenstvom ľudí v Liptovskom Hrádku, ktorí sa stretávajú pri Božom slove, modlitbe a službe druhým. Dvere sú otvorené pre všetky generácie.</p>
+          <div class="hero-actions reveal">
+            <a class="button" href="#kalendar">Pozrieť kalendár <span aria-hidden="true">→</span></a>
+            <a class="button button--ghost" href="#kontakt">Ako nás nájdete</a>
+          </div>
+        </div>
+
+        <aside class="service-card reveal" aria-label="Najbližšie pravidelné služby Božie">
+          <span class="service-card__label">Každú nedeľu</span>
+          <div class="service-card__time">09:00</div>
+          <p class="service-card__meta">Služby Božie<br>Hviezdoslavova 142, Liptovský Hrádok</p>
+          <div class="service-card__divider"></div>
+          <div class="service-card__next">
+            <div class="date-badge"><strong id="nextSundayDay">—</strong><span id="nextSundayMonth">—</span></div>
+            <div>
+              <strong id="nextSundayLabel">Najbližšia nedeľa</strong>
+              <small>Detská besiedka prebieha súbežne o 09:00.</small>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="quick-links container" aria-label="Rýchle odkazy">
+      <div class="quick-grid reveal">
+        <button class="quick-link" type="button" data-config-action="whatsapp"><span class="quick-icon">◉</span><span><strong>WhatsApp komunita</strong><small>Oznamy a život zboru v mobile</small></span></button>
+        <a class="quick-link" href="#program"><span class="quick-icon">◷</span><span><strong>Pravidelný program</strong><small>Stretnutia počas týždňa</small></span></a>
+        <a class="quick-link" href="#dokumenty"><span class="quick-icon">↓</span><span><strong>Dokumenty</strong><small>Správy a zborový časopis</small></span></a>
+        <a class="quick-link" href="#kontakt"><span class="quick-icon">⌖</span><span><strong>Kontakt a mapa</strong><small>Farský úrad a vedenie</small></span></a>
+      </div>
+    </div>
+
+    <section class="section section--compact permanent-section" id="stale-oznamy">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Stále po ruke</span>
+          <h2 class="section-title">Trvalé oznamy a praktické odkazy.</h2>
+          <p class="section-lead">Informácie, ktoré sa nemenia každý týždeň a nemajú dátum skončenia. V demo administrácii ich možno upravovať rovnako ako bežné oznamy.</p>
+        </div>
+
+        <div class="permanent-grid" id="permanentNoticeGrid" aria-live="polite"></div>
+
+        <div class="community-tools reveal" id="komunita">
+          <article class="community-tool community-tool--primary">
+            <span class="community-tool__icon" aria-hidden="true">◉</span>
+            <h3>WhatsApp zborová komunita</h3>
+            <p>Rýchle oznamy, pripomienky podujatí a praktické informácie priamo v mobile.</p>
+            <button type="button" data-config-action="whatsapp">Pridať sa do komunity →</button>
+          </article>
+          <article class="community-tool">
+            <span class="community-tool__icon" aria-hidden="true">♡</span>
+            <h3>Modlitebná prosba</h3>
+            <p>Pošlite prosbu o modlitbu alebo požiadajte o osobný rozhovor.</p>
+            <a href="mailto:lipt.hradok@ecav.sk?subject=Modlitebná%20prosba">Napísať dôvernú správu →</a>
+          </article>
+          <article class="community-tool">
+            <span class="community-tool__icon" aria-hidden="true">☎</span>
+            <h3>Potrebujem pomoc</h3>
+            <p>Pastorálny rozhovor, návšteva chorého alebo praktická otázka pre farský úrad.</p>
+            <a href="tel:+421918828303">Zavolať na farský úrad →</a>
+          </article>
+          <article class="community-tool">
+            <span class="community-tool__icon" aria-hidden="true">＋</span>
+            <h3>Podpora zboru</h3>
+            <p>Miesto pre číslo účtu, QR platbu alebo stránku s možnosťami podpory služby zboru.</p>
+            <button type="button" data-config-action="giving">Zobraziť možnosti podpory →</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="aktuality">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Aktuálne v zbore</span>
+          <h2 class="section-title">Oznamy na jednom mieste.</h2>
+          <p class="section-lead">Najdôležitejšie informácie pre členov zboru aj návštevníkov. V ostrej verzii sa budú publikovať cez administračné prostredie.</p>
+        </div>
+
+        <div class="announcements-layout">
+          <article class="featured-note reveal" id="featuredAnnouncement">
+            <span class="featured-note__tag">Najbližšie stretnutie</span>
+            <h3>Nedeľné Služby Božie</h3>
+            <p>Každú nedeľu o 09:00 v evanjelickom kostole na Hviezdoslavovej ulici v Liptovskom Hrádku.</p>
+            <a href="#program">Pozrieť pravidelný program →</a>
+          </article>
+          <div class="announcement-list" id="announcementList" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--forest" id="kalendar">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Kalendár</span>
+          <h2 class="section-title">Kedy sa stretneme?</h2>
+          <p class="section-lead">Kalendár zobrazuje pravidelný program a udalosti pridané cez demo administráciu. Kliknutím na deň zobrazíte jeho program.</p>
+        </div>
+
+        <div class="calendar-shell reveal">
+          <div class="calendar-main">
+            <div class="calendar-toolbar">
+              <h3 class="calendar-title" id="calendarTitle">Kalendár</h3>
+              <div class="calendar-controls">
+                <button class="icon-button" id="calendarPrev" type="button" aria-label="Predchádzajúci mesiac">←</button>
+                <button class="icon-button" id="calendarToday" type="button">Dnes</button>
+                <button class="icon-button" id="calendarNext" type="button" aria-label="Nasledujúci mesiac">→</button>
+              </div>
+            </div>
+            <div class="calendar-weekdays" aria-hidden="true"><span>Po</span><span>Ut</span><span>St</span><span>Št</span><span>Pi</span><span>So</span><span>Ne</span></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+          <aside class="events-panel">
+            <h3 id="eventPanelTitle">Najbližšie udalosti</h3>
+            <p class="events-panel__subtitle" id="eventPanelSubtitle">Pravidelné aj jednorazové stretnutia</p>
+            <div class="event-feed" id="eventFeed"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--white" id="program">
+      <div class="container">
+        <div class="section-heading section-heading--center">
+          <span class="eyebrow">Pravidelný program</span>
+          <h2 class="section-title">Týždeň v našom zbore.</h2>
+          <p class="section-lead">Program je zostavený z verejne dostupných informácií pôvodného webu. Mimoriadne zmeny a sviatočné termíny patria do sekcie Aktuality.</p>
+        </div>
+
+        <div class="program-grid">
+          <article class="program-item reveal">
+            <div><span class="program-day">Nedeľa</span><strong class="program-time">09:00</strong></div>
+            <div><h3>Služby Božie</h3><p>Spoločné bohoslužobné stretnutie v evanjelickom kostole na Hviezdoslavovej ulici.</p></div>
+          </article>
+          <article class="program-item reveal">
+            <div><span class="program-day">Nedeľa</span><strong class="program-time">09:00</strong></div>
+            <div><h3>Detská besiedka</h3><p>Program pre deti prebieha počas Služieb Božích, zvyčajne v hornej miestnosti kostola.</p></div>
+          </article>
+          <article class="program-item reveal">
+            <div><span class="program-day">Streda</span><strong class="program-time">podľa oznamov</strong></div>
+            <div><h3>Modlitebné spoločenstvo</h3><p>Pravidelné stretnutie pri modlitbe za zbor, rodiny, mesto a aktuálne potreby.</p></div>
+          </article>
+          <article class="program-item reveal">
+            <div><span class="program-day">Každý 2. piatok</span><strong class="program-time">19:00</strong></div>
+            <div><h3>Stretnutie mužov</h3><p>Neformálny spoločný čas mužov v hornej miestnosti, rozhovory a duchovné povzbudenie.</p></div>
+          </article>
+          <article class="program-item reveal">
+            <div><span class="program-day">Počas týždňa</span><strong class="program-time">aktuálne</strong></div>
+            <div><h3>Dorast a mládež</h3><p>Stretnutia, výlety, tábory a spoločné aktivity. Presný termín je vhodné zverejňovať v aktuálnych oznamoch.</p></div>
+          </article>
+          <article class="program-item reveal">
+            <div><span class="program-day">Podľa dohody</span><strong class="program-time">kontakt</strong></div>
+            <div><h3>Pastorálna služba</h3><p>Rozhovor, duchovné sprevádzanie, návšteva chorých alebo príprava sviatostí a obradov.</p></div>
+          </article>
+        </div>
+        <p class="program-note">Poznámka pre ostrý web: časy bez presného verejného údaja treba pred nasadením potvrdiť a spravovať cez administráciu.</p>
+      </div>
+    </section>
+
+    <section class="photo-story" aria-label="Život zboru v obraze">
+      <img src="assets/images/konfirmacia-2026.webp" alt="Slávnostná konfirmácia v evanjelickom kostole v Liptovskom Hrádku" loading="lazy">
+      <div class="photo-story__overlay"></div>
+      <div class="container photo-story__content">
+        <span class="eyebrow">Spoločne pred Bohom</span>
+        <blockquote>„Kde sú dvaja alebo traja zhromaždení v mojom mene, tam som medzi nimi.“</blockquote>
+        <p>Spoločenstvo viery sa tvorí pri Božom slove, modlitbe, sviatostiach aj vo vzájomnej službe.</p>
+      </div>
+    </section>
+
+    <section class="section section--forest" id="zivot-zboru">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Život zboru</span>
+          <h2 class="section-title">Spoločenstvo pre každú generáciu.</h2>
+          <p class="section-lead">Cirkevný zbor nie je iba nedeľné stretnutie. Je to priestor pre rast, priateľstvá, službu a praktickú pomoc.</p>
+        </div>
+        <div class="life-grid">
+          <article class="life-card reveal" data-number="01"><span class="life-card__icon">☺</span><h3>Deti</h3><p>Detská besiedka, tvorivé aktivity a priestor, kde deti primerane svojmu veku spoznávajú biblické príbehy.</p></article>
+          <article class="life-card reveal" data-number="02"><span class="life-card__icon">↗</span><h3>Dorast a mládež</h3><p>Stretnutia mladých, výlety, tábory, rozhovory a hľadanie odpovedí na dôležité životné otázky.</p></article>
+          <article class="life-card reveal" data-number="03"><span class="life-card__icon">✦</span><h3>Modlitby</h3><p>Modlitebné spoločenstvo je jedným z dôležitých pilierov života zboru a pravidelne sa stretáva v stredu.</p></article>
+          <article class="life-card reveal" data-number="04"><span class="life-card__icon">◎</span><h3>Dospelí a rodiny</h3><p>Biblické vzdelávanie, rodinné aktivity, stretnutia mužov a ďalšie príležitosti na budovanie vzťahov.</p></article>
+          <article class="life-card reveal" data-number="05"><span class="life-card__icon">♫</span><h3>Hudba a médiá</h3><p>Spev, hudobná služba, audionahrávky, zborový časopis a zachytávanie života spoločenstva.</p></article>
+          <article class="life-card reveal" data-number="06"><span class="life-card__icon">♡</span><h3>Pomoc a sprevádzanie</h3><p>Pastorálna starostlivosť, sprevádzanie zarmútených a praktická pomoc ľuďom v náročných obdobiach.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="prakticke">
+      <div class="container">
+        <div class="section-heading section-heading--center">
+          <span class="eyebrow">Praktické informácie</span>
+          <h2 class="section-title">Sviatosti, obrady a životné udalosti.</h2>
+          <p class="section-lead">Jasné prvé informácie a jednoduchý kontakt na farský úrad. Konkrétny postup sa vždy dohodne osobne.</p>
+        </div>
+        <div class="practical-grid">
+          <article class="practical-card reveal"><div class="practical-card__icon">✧</div><h3>Krst</h3><p>Informácie o príprave krstu dieťaťa alebo dospelého a dohodnutie termínu.</p><a href="mailto:lipt.hradok@ecav.sk?subject=Otázka%20k%20krstu">Napísať na farský úrad →</a></article>
+          <article class="practical-card reveal"><div class="practical-card__icon">◇</div><h3>Konfirmácia</h3><p>Príprava mladých ľudí k osobnému vyznaniu viery a aktívnemu životu v cirkevnom zbore.</p><a href="mailto:lipt.hradok@ecav.sk?subject=Otázka%20ku%20konfirmácii">Získať informácie →</a></article>
+          <article class="practical-card reveal"><div class="practical-card__icon">∞</div><h3>Sobáš</h3><p>Príprava cirkevného sobáša, potrebné dokumenty a dohoda termínu obradu.</p><a href="mailto:lipt.hradok@ecav.sk?subject=Otázka%20k%20sobášu">Kontaktovať zbor →</a></article>
+          <article class="practical-card reveal"><div class="practical-card__icon">○</div><h3>Pohreb a sprevádzanie</h3><p>Dohodnutie pohrebného obradu a duchovná podpora rodiny v období zármutku.</p><a href="tel:+421918828303">Zavolať administrátorovi →</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--white" id="dokumenty">
+      <div class="container documents-shell">
+        <div class="section-heading">
+          <span class="eyebrow">Na stiahnutie</span>
+          <h2 class="section-title">Dokumenty a zborový časopis.</h2>
+          <p class="section-lead">V ostrej verzii môže byť táto sekcia napojená na Google Disk alebo cloudové úložisko a dokumenty sa budú spravovať cez administráciu.</p>
+          <a class="button button--ghost" href="https://www.ecavlh.sk/dokumenty" target="_blank" rel="noopener">Otvoriť pôvodný archív</a>
+        </div>
+        <div class="document-list reveal">
+          <article class="document-item"><span class="document-icon">PDF</span><span><strong>Kňazská správa za rok 2025</strong><small>Výročná správa cirkevného zboru</small></span><a href="https://www.ecavlh.sk/documentloader.php?filename=kn%CC%8Cazska%CC%81+spra%CC%81va+2025+lh.pdf&id=887" target="_blank" rel="noopener">Stiahnuť</a></article>
+          <article class="document-item"><span class="document-icon">PDF</span><span><strong>Hrádocký prameň</strong><small>Zborový časopis — archív vydaní</small></span><a href="https://www.ecavlh.sk/zborovy-casopis" target="_blank" rel="noopener">Archív</a></article>
+          <article class="document-item"><span class="document-icon">DOC</span><span><strong>Tlačivá a žiadosti</strong><small>Miesto pre formuláre spravované administrátorom</small></span><a href="#kontakt">Vyžiadať</a></article>
+          <article class="document-item"><span class="document-icon">ZIP</span><span><strong>Fotografie z podujatí</strong><small>Budúce napojenie na albumy a Google Disk</small></span><a href="#galeria">Galéria</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="galeria">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Galéria</span>
+          <h2 class="section-title">Momenty zo života spoločenstva.</h2>
+          <p class="section-lead">Výber reálnych fotografií kostola a zborového života. Kliknutím sa fotografia otvorí vo väčšom náhľade; realizačná firma môže galériu napojiť na CMS, Google Drive API alebo iné úložisko.</p>
+        </div>
+        <div class="gallery-grid reveal">
+          <button class="gallery-card" type="button" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-src="assets/images/konfirmacia-2026.webp" data-gallery-alt="Konfirmácia 2026 v evanjelickom kostole">
+            <img class="gallery-art" src="assets/images/konfirmacia-2026.webp" alt="Konfirmácia 2026 v evanjelickom kostole" loading="lazy">
+            <span class="gallery-overlay"><strong>Konfirmácia 2026</strong><small>Slávnostné spoločenstvo</small></span>
+          </button>
+          <button class="gallery-card" type="button" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-src="assets/images/kostol-exterier.webp" data-gallery-alt="Budova evanjelického kostola v Liptovskom Hrádku">
+            <img class="gallery-art" src="assets/images/kostol-exterier.webp" alt="Budova evanjelického kostola v Liptovskom Hrádku" loading="lazy">
+            <span class="gallery-overlay"><strong>Náš kostol</strong><small>Hviezdoslavova 142</small></span>
+          </button>
+          <button class="gallery-card" type="button" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-src="assets/images/kostol-interier-lod.webp" data-gallery-alt="Pohľad cez loď evanjelického kostola k oltáru">
+            <img class="gallery-art" src="assets/images/kostol-interier-lod.webp" alt="Pohľad cez loď evanjelického kostola k oltáru" loading="lazy">
+            <span class="gallery-overlay"><strong>Priestor bohoslužieb</strong><small>Interiér kostola</small></span>
+          </button>
+          <button class="gallery-card" type="button" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-src="assets/images/kostol-interier-kazatelnica.webp" data-gallery-alt="Kazateľnica, oltár a drevený strop kostola">
+            <img class="gallery-art" src="assets/images/kostol-interier-kazatelnica.webp" alt="Kazateľnica, oltár a drevený strop kostola" loading="lazy">
+            <span class="gallery-overlay"><strong>Miesto slova a modlitby</strong><small>Kazateľnica a oltár</small></span>
+          </button>
+        </div>
+
+        <div class="modal fade gallery-modal" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header border-0">
+                <h2 class="modal-title fs-5" id="galleryModalLabel">Fotografia zo života zboru</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavrieť"></button>
+              </div>
+              <div class="modal-body pt-0"><img id="galleryModalImage" class="img-fluid rounded-4 mx-auto" src="assets/images/konfirmacia-2026.webp" alt=""></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--white" id="o-nas">
+      <div class="container about-grid">
+        <div class="about-art reveal">
+          <img src="assets/images/kostol-interier-kazatelnica.webp" alt="Svetlý interiér evanjelického kostola s kazateľnicou a oltárom" loading="lazy">
+          <div class="about-quote"><p>„Túžime byť miestom, kde človek nájde prijatie, pokoj a povzbudenie z Božieho slova.“</p></div>
+        </div>
+        <div class="about-copy">
+          <span class="eyebrow">O našom zbore</span>
+          <h2 class="section-title">Viera zakorenená v Liptove.</h2>
+          <p>Liptovský Hrádok bol v minulosti diaspórou Svätopeterského zboru, do ktorého patrilo sedem obcí. Počas obdobia prvej Československej republiky v meste narástol počet evanjelikov a postupne sa rozvíjal samostatný zborový život.</p>
+          <p>Dnes zbor vytvára priestor pre bohoslužby, deti, mladých, dospelých, modlitby, pastorálnu službu aj spoločné podujatia. Nový web má tieto oblasti predstaviť zrozumiteľne a umožniť ich jednoduchú správu.</p>
+          <div class="about-stats">
+            <div class="about-stat"><strong>09:00</strong><small>nedeľné Služby Božie</small></div>
+            <div class="about-stat"><strong>7 dní</strong><small>priestor pre život viery</small></div>
+            <div class="about-stat"><strong>všetci</strong><small>generácie vítané</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kontakt">
+      <div class="container">
+        <div class="section-heading section-heading--center">
+          <span class="eyebrow">Kontakt</span>
+          <h2 class="section-title">Ozvite sa alebo príďte medzi nás.</h2>
+          <p class="section-lead">Kontaktné údaje sú prevzaté z verejne indexovanej kontaktnej stránky pôvodného webu. Pred ostrým publikovaním ich treba administratívne potvrdiť.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-card reveal">
+            <h3>Farský úrad a kostol</h3>
+            <div class="contact-row"><span>⌖</span><div><strong>ECAV Liptovský Hrádok</strong><br>Hviezdoslavova 142<br>033 01 Liptovský Hrádok</div></div>
+            <div class="contact-row"><span>✉</span><div><a href="mailto:lipt.hradok@ecav.sk">lipt.hradok@ecav.sk</a></div></div>
+            <div class="contact-row"><span>◷</span><div><strong>Nedeľné Služby Božie</strong><br>každú nedeľu o 09:00</div></div>
+            <div class="contact-map"><div><div style="font-size:2rem;margin-bottom:8px;">⌖</div><strong>Liptovský Hrádok</strong><br><a href="https://www.google.com/maps/search/?api=1&query=Hviezdoslavova%20142%2C%20Liptovsk%C3%BD%20Hr%C3%A1dok" target="_blank" rel="noopener">Otvoriť v Google Maps →</a></div></div>
+          </div>
+
+          <div class="team-grid reveal">
+            <article class="team-card"><div class="team-avatar">MB</div><h3>Mgr. Michal Belanji</h3><p>administrátor zboru</p><a href="tel:+421918828303">+421 918 828 303</a></article>
+            <article class="team-card"><div class="team-avatar">JP</div><h3>Ing. Ján Pavlík, PhD.</h3><p>zborový dozorca</p><a href="tel:+421903175627">+421 903 175 627</a></article>
+            <article class="team-card"><div class="team-avatar">OV</div><h3>Ing. Oliva Vrbičanová</h3><p>zástupkyňa zborového dozorcu</p><a href="tel:+421907712450">+421 907 712 450</a></article>
+            <article class="team-card"><div class="team-avatar">CZ</div><h3>Cirkevný zbor</h3><p>všeobecné otázky, dokumenty a termíny</p><a href="mailto:lipt.hradok@ecav.sk">lipt.hradok@ecav.sk</a></article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#domov"><span class="brand-mark">✦</span><span class="brand-copy"><strong>ECAV Liptovský Hrádok</strong><small>Cirkevný zbor</small></span></a>
+          <p>Funkčný HTML koncept nového webu zboru. Obsah aj funkcie sú pripravené na ďalšie napojenie na CMS, databázu a úložisko dokumentov.</p>
+        </div>
+        <div class="footer-col"><h3>Web</h3><a href="#stale-oznamy">Stále po ruke</a><a href="#aktuality">Aktuality</a><a href="#kalendar">Kalendár</a><a href="#program">Program</a><a href="#galeria">Galéria</a></div>
+        <div class="footer-col"><h3>Život zboru</h3><a href="#zivot-zboru">Deti</a><a href="#zivot-zboru">Mládež</a><a href="#zivot-zboru">Dospelí</a><a href="#prakticke">Sviatosti a obrady</a></div>
+        <div class="footer-col"><h3>Kontakt</h3><a href="mailto:lipt.hradok@ecav.sk">lipt.hradok@ecav.sk</a><a href="tel:+421918828303">+421 918 828 303</a><a href="#kontakt">Hviezdoslavova 142</a></div>
+      </div>
+      <div class="footer-bottom"><span>© <span id="currentYear"></span> Evanjelický a. v. cirkevný zbor Liptovský Hrádok</span><span>HTML koncept · bez databázy · demo administrácia používa localStorage</span></div>
+    </div>
+  </footer>
+
+  <!-- Demo admin -->
+  <div class="admin-backdrop" id="adminBackdrop"></div>
+  <aside class="admin-panel" id="adminPanel" aria-hidden="true" aria-label="Demo administrácia">
+    <div class="admin-header">
+      <div><h2>Demo administrácia</h2><p>Lokálny funkčný náhľad bez databázy.</p></div>
+      <button class="icon-button" id="adminCloseButton" type="button" aria-label="Zatvoriť administráciu">×</button>
+    </div>
+    <div class="admin-demo-alert">Toto nie je zabezpečené produkčné rozhranie. Zmeny sa ukladajú iba v tomto prehliadači cez localStorage. Oznam môže byť časový alebo trvalý bez dátumu.</div>
+    <div class="admin-tabs" role="tablist">
+      <button class="admin-tab is-active" type="button" data-admin-tab="announcements">Oznamy</button>
+      <button class="admin-tab" type="button" data-admin-tab="events">Udalosti</button>
+      <button class="admin-tab" type="button" data-admin-tab="design">Vzhľad</button>
+    </div>
+
+    <div class="admin-view is-active" data-admin-view="announcements">
+      <form id="announcementForm">
+        <input type="hidden" id="announcementId">
+        <div class="form-grid">
+          <div class="field"><label for="announcementCategory">Kategória</label><select id="announcementCategory"><option>Oznam</option><option>Bohoslužby</option><option>Deti</option><option>Modlitby</option><option>Pastorálna služba</option><option>Komunita</option><option>Praktické</option><option>Dokumenty</option><option>Pozvánka</option></select></div>
+          <div class="field" id="announcementDateField"><label for="announcementDate">Dátum</label><input id="announcementDate" type="date"></div>
+          <label class="checkbox-row field--full" for="announcementPersistent">
+            <input id="announcementPersistent" type="checkbox">
+            <span><strong>Trvalý oznam bez dátumu</strong>Zobrazí sa v sekcii „Stále po ruke“ a nebude sa viazať na kalendárny dátum.</span>
+          </label>
+          <div class="field field--full"><label for="announcementTitle">Nadpis</label><input id="announcementTitle" type="text" maxlength="90" required></div>
+          <div class="field field--full"><label for="announcementText">Text</label><textarea id="announcementText" maxlength="400" required></textarea></div>
+          <div class="field"><label for="announcementActionLabel">Text odkazu <small>(voliteľné)</small></label><input id="announcementActionLabel" type="text" maxlength="60" placeholder="Napr. Pozrieť program"></div>
+          <div class="field"><label for="announcementActionHref">Cieľ odkazu <small>(voliteľné)</small></label><input id="announcementActionHref" type="text" maxlength="250" placeholder="#program, mailto: alebo https://"></div>
+        </div>
+        <div class="form-actions"><button class="button button--small" type="submit">Uložiť oznam</button><button class="button button--ghost button--small" id="announcementCancelEdit" type="button" hidden>Zrušiť úpravu</button></div>
+      </form>
+      <div class="admin-items" id="adminAnnouncementItems"></div>
+    </div>
+
+    <div class="admin-view" data-admin-view="events">
+      <form id="eventForm">
+        <input type="hidden" id="eventId">
+        <div class="form-grid">
+          <div class="field field--full"><label for="eventTitle">Názov udalosti</label><input id="eventTitle" type="text" maxlength="90" required></div>
+          <div class="field"><label for="eventDate">Dátum</label><input id="eventDate" type="date" required></div>
+          <div class="field"><label for="eventTime">Čas</label><input id="eventTime" type="time"></div>
+          <div class="field field--full"><label for="eventPlace">Miesto</label><input id="eventPlace" type="text" maxlength="120" value="Evanjelický kostol, Liptovský Hrádok"></div>
+          <div class="field field--full"><label for="eventDescription">Popis</label><textarea id="eventDescription" maxlength="400"></textarea></div>
+        </div>
+        <div class="form-actions"><button class="button button--small" type="submit">Uložiť udalosť</button><button class="button button--ghost button--small" id="eventCancelEdit" type="button" hidden>Zrušiť úpravu</button></div>
+      </form>
+      <div class="admin-items" id="adminEventItems"></div>
+    </div>
+
+    <div class="admin-view" data-admin-view="design">
+      <h3>Farebný filter úvodných fotografií</h3>
+      <p style="color:var(--ink-soft);font-size:.85rem;">Výber upraví prekrytie fotografií a uloží sa v prehliadači. Produkčná verzia môže fotografie aj filter spravovať cez CMS.</p>
+      <div class="theme-options">
+        <button class="theme-option" type="button" data-theme-choice="default"><strong>Prirodzené</strong></button>
+        <button class="theme-option" type="button" data-theme-choice="dawn"><strong>Teplé</strong></button>
+        <button class="theme-option" type="button" data-theme-choice="forest"><strong>Tmavé</strong></button>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:25px 0;">
+      <button class="button button--danger button--small" id="resetDemoData" type="button">Obnoviť pôvodné demo dáta</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+  <script>
+    "use strict";
+
+    /* =========================================================
+       1. DEMO DATA LAYER
+       Replace this section with API/CMS calls in production.
+       ========================================================= */
+    const STORAGE = {
+      announcements: "ecavlh-demo-announcements-v2",
+      events: "ecavlh-demo-events-v1",
+      theme: "ecavlh-demo-theme-v1"
+    };
+
+    /*
+      CENTRÁLNE PRAKTICKÉ ODKAZY PRE REALIZAČNÚ FIRMU
+      -------------------------------------------------
+      Doplňte reálny pozývací odkaz WhatsApp komunity a stránku/platbu podpory.
+      Pokiaľ je hodnota prázdna, koncept namiesto otvorenia odkazu zobrazí upozornenie.
+    */
+    const SITE_CONFIG = {
+      whatsappCommunityUrl: "",
+      givingUrl: ""
+    };
+
+    const defaultAnnouncements = [
+      {
+        id: "p1",
+        persistent: true,
+        category: "Bohoslužby",
+        title: "Nedeľné Služby Božie",
+        text: "Stretávame sa každú nedeľu o 09:00 v evanjelickom kostole na Hviezdoslavovej ulici.",
+        actionLabel: "Pozrieť pravidelný program →",
+        actionHref: "#program"
+      },
+      {
+        id: "p2",
+        persistent: true,
+        category: "Deti",
+        title: "Detská besiedka",
+        text: "Program pre deti prebieha súbežne s nedeľnými Službami Božími o 09:00.",
+        actionLabel: "Život detí v zbore →",
+        actionHref: "#zivot-zboru"
+      },
+      {
+        id: "p3",
+        persistent: true,
+        category: "Pastorálna služba",
+        title: "Rozhovor a duchovné sprevádzanie",
+        text: "V prípade choroby, zármutku alebo potreby osobného rozhovoru sa môžete obrátiť na farský úrad.",
+        actionLabel: "Zobraziť kontakty →",
+        actionHref: "#kontakt"
+      },
+      {
+        id: "p4",
+        persistent: true,
+        category: "Modlitby",
+        title: "Pošlite modlitebnú prosbu",
+        text: "Prosbu o modlitbu môžete poslať e-mailom. V produkčnej verzii môže byť doplnený diskrétny formulár.",
+        actionLabel: "Napísať prosbu →",
+        actionHref: "mailto:lipt.hradok@ecav.sk?subject=Modlitebná%20prosba"
+      },
+      {
+        id: "a1",
+        persistent: false,
+        category: "Bohoslužby",
+        date: new Date().toISOString().slice(0, 10),
+        title: "Aktuálny program a zmeny bohoslužieb",
+        text: "Sviatočné termíny a mimoriadne zmeny pravidelného programu budú zverejnené v kalendári a časových oznamoch."
+      },
+      {
+        id: "a2",
+        persistent: false,
+        category: "Dokumenty",
+        date: "2026-01-01",
+        title: "Kňazská správa za rok 2025",
+        text: "Výročná správa je dostupná v sekcii Dokumenty na stiahnutie."
+      },
+      {
+        id: "a3",
+        persistent: false,
+        category: "Oznam",
+        date: new Date().toISOString().slice(0, 10),
+        title: "Aktuálne termíny sledujte v kalendári",
+        text: "Mimoriadne podujatia, sviatočné bohoslužby a zmeny pravidelného programu budú zverejnené v kalendári a oznamoch."
+      }
+    ];
+
+    const loadJSON = (key, fallback) => {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : structuredClone(fallback);
+      } catch (error) {
+        console.warn("Nepodarilo sa načítať localStorage:", error);
+        return structuredClone(fallback);
+      }
+    };
+
+    const saveJSON = (key, value) => {
+      try { localStorage.setItem(key, JSON.stringify(value)); }
+      catch (error) { console.warn("Nepodarilo sa uložiť localStorage:", error); }
+    };
+
+    let announcements = loadJSON(STORAGE.announcements, defaultAnnouncements);
+    let customEvents = loadJSON(STORAGE.events, []);
+    let selectedTheme = localStorage.getItem(STORAGE.theme) || "default";
+
+    /* =========================================================
+       2. UTILITIES
+       ========================================================= */
+    const $ = (selector, scope = document) => scope.querySelector(selector);
+    const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
+    const monthNames = ["január", "február", "marec", "apríl", "máj", "jún", "júl", "august", "september", "október", "november", "december"];
+    const monthShort = ["jan", "feb", "mar", "apr", "máj", "jún", "júl", "aug", "sep", "okt", "nov", "dec"];
+    const dayNames = ["nedeľa", "pondelok", "utorok", "streda", "štvrtok", "piatok", "sobota"];
+
+    const toLocalDateKey = (date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    };
+
+    const parseLocalDate = (key) => {
+      const [year, month, day] = key.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    };
+
+    const formatDate = (key, includeWeekday = false) => {
+      const date = parseLocalDate(key);
+      return new Intl.DateTimeFormat("sk-SK", {
+        weekday: includeWeekday ? "long" : undefined,
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(date);
+    };
+
+    const escapeHTML = (value = "") => String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+    const safeHref = (value = "") => {
+      const href = String(value).trim();
+      return /^(https?:\/\/|mailto:|tel:|#|\/)/i.test(href) ? href : "#";
+    };
+
+    let toastTimer;
+    const showToast = (message) => {
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
+    };
+
+    /* =========================================================
+       3. HEADER, MOBILE NAV, SCROLL REVEAL
+       ========================================================= */
+    const header = $("#siteHeader");
+    const menuToggle = $("#menuToggle");
+    const mainNav = $("#mainNav");
+
+    const updateHeader = () => header.classList.toggle("is-scrolled", window.scrollY > 20);
+    updateHeader();
+    window.addEventListener("scroll", updateHeader, { passive: true });
+
+    /* Bootstrap Collapse controls the mobile navigation. Custom classes only tune the visual state. */
+    mainNav.addEventListener("show.bs.collapse", () => header.classList.add("menu-open"));
+    mainNav.addEventListener("hidden.bs.collapse", () => header.classList.remove("menu-open"));
+
+    $$(".main-nav a").forEach(link => link.addEventListener("click", () => {
+      if (window.innerWidth < 992) {
+        bootstrap.Collapse.getOrCreateInstance(mainNav, { toggle: false }).hide();
+      }
+    }));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    $$(".reveal").forEach(element => revealObserver.observe(element));
+
+    const sections = $$("main section[id]");
+    const navLinks = $$(".main-nav a");
+    const scrollSpy = new IntersectionObserver((entries) => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      navLinks.forEach(link => link.classList.toggle("active", link.getAttribute("href") === `#${visible.target.id}`));
+    }, { rootMargin: "-30% 0px -60%", threshold: [0.01, 0.25, 0.5] });
+    sections.forEach(section => scrollSpy.observe(section));
+
+    /* =========================================================
+       4. NEXT SUNDAY
+       ========================================================= */
+    const updateNextSunday = () => {
+      const now = new Date();
+      const next = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const daysUntilSunday = (7 - next.getDay()) % 7;
+      next.setDate(next.getDate() + daysUntilSunday);
+      $("#nextSundayDay").textContent = String(next.getDate()).padStart(2, "0");
+      $("#nextSundayMonth").textContent = monthShort[next.getMonth()];
+      $("#nextSundayLabel").textContent = `${dayNames[next.getDay()]}, ${next.getDate()}. ${monthNames[next.getMonth()]}`;
+    };
+    updateNextSunday();
+    $("#currentYear").textContent = new Date().getFullYear();
+
+    /* =========================================================
+       5. ANNOUNCEMENTS
+       ========================================================= */
+    const permanentIcon = (category = "") => {
+      const normalized = category.toLowerCase();
+      if (normalized.includes("bohosluž")) return "◷";
+      if (normalized.includes("deti")) return "☺";
+      if (normalized.includes("modlit")) return "♡";
+      if (normalized.includes("pastor")) return "☎";
+      if (normalized.includes("komunit")) return "◉";
+      return "✦";
+    };
+
+    const renderAnnouncements = () => {
+      const datedList = $("#announcementList");
+      const permanentList = $("#permanentNoticeGrid");
+      const dated = announcements
+        .filter(item => !item.persistent)
+        .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+      const permanent = announcements.filter(item => item.persistent);
+
+      datedList.innerHTML = dated.length ? dated.map(item => `
+        <article class="announcement-card reveal is-visible">
+          <div>
+            <div class="announcement-card__category">${escapeHTML(item.category)}</div>
+            <div class="announcement-card__date">${item.date ? escapeHTML(formatDate(item.date)) : "Bez dátumu"}</div>
+          </div>
+          <div>
+            <h3>${escapeHTML(item.title)}</h3>
+            <p>${escapeHTML(item.text)}</p>
+          </div>
+          <a class="arrow-link" href="${escapeHTML(safeHref(item.actionHref || "#kalendar"))}" aria-label="Otvoriť súvisiacu informáciu">→</a>
+        </article>
+      `).join("") : '<div class="empty-state">Zatiaľ nie sú publikované žiadne časové oznamy.</div>';
+
+      permanentList.innerHTML = permanent.length ? permanent.map(item => `
+        <article class="permanent-card reveal is-visible">
+          <div class="permanent-card__top">
+            <span class="permanent-card__icon" aria-hidden="true">${permanentIcon(item.category)}</span>
+            <span class="permanent-card__badge">${escapeHTML(item.category || "Trvalý oznam")}</span>
+          </div>
+          <h3>${escapeHTML(item.title)}</h3>
+          <p>${escapeHTML(item.text)}</p>
+          ${item.actionLabel && item.actionHref ? `<a href="${escapeHTML(safeHref(item.actionHref))}">${escapeHTML(item.actionLabel)}</a>` : ""}
+        </article>
+      `).join("") : '<div class="empty-state" style="grid-column:1/-1;">Zatiaľ nie sú publikované žiadne trvalé oznamy.</div>';
+
+      renderAdminAnnouncements();
+    };
+
+    /* =========================================================
+       6. CALENDAR + EVENT GENERATION
+       ========================================================= */
+    const today = new Date();
+    let calendarCursor = new Date(today.getFullYear(), today.getMonth(), 1);
+    let selectedDateKey = null;
+
+    // Demo recurring events. Production: replace with CMS recurrence rules.
+    const recurringEventsForDate = (date) => {
+      const day = date.getDay();
+      const events = [];
+      if (day === 0) {
+        events.push({ id: `service-${toLocalDateKey(date)}`, title: "Služby Božie", date: toLocalDateKey(date), time: "09:00", place: "Evanjelický kostol, Hviezdoslavova 142", description: "Pravidelné nedeľné bohoslužobné stretnutie.", type: "pravidelné" });
+        events.push({ id: `children-${toLocalDateKey(date)}`, title: "Detská besiedka", date: toLocalDateKey(date), time: "09:00", place: "Horná miestnosť kostola", description: "Program pre deti počas Služieb Božích.", type: "pravidelné" });
+      }
+      if (day === 3) {
+        events.push({ id: `prayer-${toLocalDateKey(date)}`, title: "Modlitebné spoločenstvo", date: toLocalDateKey(date), time: "", place: "Zborové priestory", description: "Presný čas podľa aktuálnych oznamov.", type: "pravidelné" });
+      }
+      return events;
+    };
+
+    const eventsForDate = (date) => {
+      const key = toLocalDateKey(date);
+      return [...recurringEventsForDate(date), ...customEvents.filter(item => item.date === key).map(item => ({ ...item, type: "udalosť" }))]
+        .sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"));
+    };
+
+    const getUpcomingEvents = (count = 8) => {
+      const results = [];
+      const cursor = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      for (let i = 0; i < 120 && results.length < count; i += 1) {
+        eventsForDate(cursor).forEach(event => results.push(event));
+        cursor.setDate(cursor.getDate() + 1);
+      }
+      return results.slice(0, count);
+    };
+
+    const renderEventCards = (events, title, subtitle) => {
+      $("#eventPanelTitle").textContent = title;
+      $("#eventPanelSubtitle").textContent = subtitle;
+      $("#eventFeed").innerHTML = events.length ? events.map(event => `
+        <article class="event-card">
+          <div class="event-card__top">
+            <span class="event-card__date">${escapeHTML(formatDate(event.date, true))}${event.time ? ` · ${escapeHTML(event.time)}` : ""}</span>
+            <span class="event-card__type">${escapeHTML(event.type)}</span>
+          </div>
+          <h4>${escapeHTML(event.title)}</h4>
+          <p>${escapeHTML(event.place || "Miesto bude upresnené")}${event.description ? `<br>${escapeHTML(event.description)}` : ""}</p>
+        </article>
+      `).join("") : '<div class="empty-state" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.65);">V tento deň nie je evidovaná udalosť.</div>';
+    };
+
+    const renderCalendar = () => {
+      const year = calendarCursor.getFullYear();
+      const month = calendarCursor.getMonth();
+      $("#calendarTitle").textContent = `${monthNames[month][0].toUpperCase()}${monthNames[month].slice(1)} ${year}`;
+
+      const grid = $("#calendarGrid");
+      grid.innerHTML = "";
+      const first = new Date(year, month, 1);
+      const mondayOffset = (first.getDay() + 6) % 7;
+      const start = new Date(year, month, 1 - mondayOffset);
+
+      for (let i = 0; i < 42; i += 1) {
+        const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+        const key = toLocalDateKey(date);
+        const events = eventsForDate(date);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "calendar-day";
+        if (date.getMonth() !== month) button.classList.add("is-outside");
+        if (key === toLocalDateKey(today)) button.classList.add("is-today");
+        if (key === selectedDateKey) button.classList.add("is-selected");
+        button.setAttribute("aria-label", `${formatDate(key, true)}, ${events.length} udalostí`);
+        button.innerHTML = `<span class="calendar-day__number">${date.getDate()}</span><span class="calendar-day__dots">${events.slice(0, 4).map(event => `<i class="calendar-dot ${event.type === "udalosť" ? "calendar-dot--custom" : ""}"></i>`).join("")}</span>`;
+        button.addEventListener("click", () => {
+          selectedDateKey = key;
+          renderCalendar();
+          renderEventCards(eventsForDate(date), formatDate(key, true), events.length ? `${events.length} stretnutia/udalosti` : "Bez programu");
+        });
+        grid.appendChild(button);
+      }
+
+      if (!selectedDateKey) renderEventCards(getUpcomingEvents(), "Najbližšie udalosti", "Pravidelné aj jednorazové stretnutia");
+    };
+
+    $("#calendarPrev").addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1); selectedDateKey = null; renderCalendar(); });
+    $("#calendarNext").addEventListener("click", () => { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1); selectedDateKey = null; renderCalendar(); });
+    $("#calendarToday").addEventListener("click", () => { calendarCursor = new Date(today.getFullYear(), today.getMonth(), 1); selectedDateKey = toLocalDateKey(today); renderCalendar(); renderEventCards(eventsForDate(today), formatDate(selectedDateKey, true), "Dnešný program"); });
+
+    /* =========================================================
+       7. DEMO ADMIN
+       ========================================================= */
+    const adminPanel = $("#adminPanel");
+    const adminBackdrop = $("#adminBackdrop");
+
+    const openAdmin = () => {
+      document.body.classList.add("admin-open");
+      adminPanel.classList.add("is-open");
+      adminBackdrop.classList.add("is-open");
+      adminPanel.setAttribute("aria-hidden", "false");
+      $("#adminCloseButton").focus();
+    };
+    const closeAdmin = () => {
+      document.body.classList.remove("admin-open");
+      adminPanel.classList.remove("is-open");
+      adminBackdrop.classList.remove("is-open");
+      adminPanel.setAttribute("aria-hidden", "true");
+      $("#adminOpenButton").focus();
+    };
+    $("#adminOpenButton").addEventListener("click", openAdmin);
+    $("#adminCloseButton").addEventListener("click", closeAdmin);
+    adminBackdrop.addEventListener("click", closeAdmin);
+    document.addEventListener("keydown", event => { if (event.key === "Escape" && adminPanel.classList.contains("is-open")) closeAdmin(); });
+
+    $$("[data-admin-tab]").forEach(tab => tab.addEventListener("click", () => {
+      $$("[data-admin-tab]").forEach(item => item.classList.toggle("is-active", item === tab));
+      $$("[data-admin-view]").forEach(view => view.classList.toggle("is-active", view.dataset.adminView === tab.dataset.adminTab));
+    }));
+
+    const syncAnnouncementDateField = () => {
+      const persistent = $("#announcementPersistent").checked;
+      $("#announcementDate").disabled = persistent;
+      $("#announcementDateField").style.opacity = persistent ? ".45" : "1";
+    };
+
+    $("#announcementPersistent").addEventListener("change", syncAnnouncementDateField);
+
+    const resetAnnouncementForm = () => {
+      $("#announcementForm").reset();
+      $("#announcementId").value = "";
+      $("#announcementDate").value = toLocalDateKey(new Date());
+      $("#announcementPersistent").checked = false;
+      $("#announcementCancelEdit").hidden = true;
+      syncAnnouncementDateField();
+    };
+
+    $("#announcementForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const id = $("#announcementId").value || `a-${Date.now()}`;
+      const persistent = $("#announcementPersistent").checked;
+      const date = $("#announcementDate").value;
+      if (!persistent && !date) {
+        showToast("Pri časovom ozname vyberte dátum.");
+        $("#announcementDate").focus();
+        return;
+      }
+      const item = {
+        id,
+        persistent,
+        category: $("#announcementCategory").value,
+        date: persistent ? "" : date,
+        title: $("#announcementTitle").value.trim(),
+        text: $("#announcementText").value.trim(),
+        actionLabel: $("#announcementActionLabel").value.trim(),
+        actionHref: $("#announcementActionHref").value.trim()
+      };
+      const index = announcements.findIndex(existing => existing.id === id);
+      if (index >= 0) announcements[index] = item; else announcements.unshift(item);
+      saveJSON(STORAGE.announcements, announcements);
+      renderAnnouncements();
+      resetAnnouncementForm();
+      showToast(index >= 0 ? "Oznam bol upravený." : "Oznam bol pridaný.");
+    });
+    $("#announcementCancelEdit").addEventListener("click", resetAnnouncementForm);
+
+    const renderAdminAnnouncements = () => {
+      const container = $("#adminAnnouncementItems");
+      container.innerHTML = announcements.map(item => `
+        <div class="admin-item"><div><strong>${escapeHTML(item.title)}</strong><small>${escapeHTML(item.category)} · ${item.persistent ? "trvalý oznam" : escapeHTML(formatDate(item.date))}</small></div><div class="admin-item__actions"><button class="admin-mini-button" type="button" data-edit-announcement="${escapeHTML(item.id)}">Upraviť</button><button class="admin-mini-button" type="button" data-delete-announcement="${escapeHTML(item.id)}">Zmazať</button></div></div>
+      `).join("");
+
+      $$('[data-edit-announcement]', container).forEach(button => button.addEventListener("click", () => {
+        const item = announcements.find(entry => entry.id === button.dataset.editAnnouncement);
+        if (!item) return;
+        $("#announcementId").value = item.id;
+        $("#announcementCategory").value = item.category;
+        $("#announcementPersistent").checked = Boolean(item.persistent);
+        $("#announcementDate").value = item.date || toLocalDateKey(new Date());
+        $("#announcementTitle").value = item.title;
+        $("#announcementText").value = item.text;
+        $("#announcementActionLabel").value = item.actionLabel || "";
+        $("#announcementActionHref").value = item.actionHref || "";
+        syncAnnouncementDateField();
+        $("#announcementCancelEdit").hidden = false;
+        $("#announcementTitle").focus();
+      }));
+      $$('[data-delete-announcement]', container).forEach(button => button.addEventListener("click", () => {
+        announcements = announcements.filter(entry => entry.id !== button.dataset.deleteAnnouncement);
+        saveJSON(STORAGE.announcements, announcements);
+        renderAnnouncements();
+        showToast("Oznam bol odstránený.");
+      }));
+    };
+
+    const resetEventForm = () => {
+      $("#eventForm").reset();
+      $("#eventId").value = "";
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      $("#eventDate").value = toLocalDateKey(tomorrow);
+      $("#eventPlace").value = "Evanjelický kostol, Liptovský Hrádok";
+      $("#eventCancelEdit").hidden = true;
+    };
+
+    $("#eventForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const id = $("#eventId").value || `e-${Date.now()}`;
+      const item = {
+        id,
+        title: $("#eventTitle").value.trim(),
+        date: $("#eventDate").value,
+        time: $("#eventTime").value,
+        place: $("#eventPlace").value.trim(),
+        description: $("#eventDescription").value.trim()
+      };
+      const index = customEvents.findIndex(existing => existing.id === id);
+      if (index >= 0) customEvents[index] = item; else customEvents.push(item);
+      saveJSON(STORAGE.events, customEvents);
+      renderAdminEvents();
+      renderCalendar();
+      resetEventForm();
+      showToast(index >= 0 ? "Udalosť bola upravená." : "Udalosť bola pridaná do kalendára.");
+    });
+    $("#eventCancelEdit").addEventListener("click", resetEventForm);
+
+    const renderAdminEvents = () => {
+      const container = $("#adminEventItems");
+      const sorted = [...customEvents].sort((a, b) => a.date.localeCompare(b.date));
+      container.innerHTML = sorted.length ? sorted.map(item => `
+        <div class="admin-item"><div><strong>${escapeHTML(item.title)}</strong><small>${escapeHTML(formatDate(item.date))}${item.time ? ` · ${escapeHTML(item.time)}` : ""}</small></div><div class="admin-item__actions"><button class="admin-mini-button" type="button" data-edit-event="${escapeHTML(item.id)}">Upraviť</button><button class="admin-mini-button" type="button" data-delete-event="${escapeHTML(item.id)}">Zmazať</button></div></div>
+      `).join("") : '<div class="empty-state">Zatiaľ nebola pridaná vlastná udalosť.</div>';
+
+      $$('[data-edit-event]', container).forEach(button => button.addEventListener("click", () => {
+        const item = customEvents.find(entry => entry.id === button.dataset.editEvent);
+        if (!item) return;
+        $("#eventId").value = item.id;
+        $("#eventTitle").value = item.title;
+        $("#eventDate").value = item.date;
+        $("#eventTime").value = item.time || "";
+        $("#eventPlace").value = item.place || "";
+        $("#eventDescription").value = item.description || "";
+        $("#eventCancelEdit").hidden = false;
+        $("#eventTitle").focus();
+      }));
+      $$('[data-delete-event]', container).forEach(button => button.addEventListener("click", () => {
+        customEvents = customEvents.filter(entry => entry.id !== button.dataset.deleteEvent);
+        saveJSON(STORAGE.events, customEvents);
+        renderAdminEvents();
+        renderCalendar();
+        showToast("Udalosť bola odstránená.");
+      }));
+    };
+
+    $$('[data-config-action]').forEach(control => control.addEventListener("click", () => {
+      const action = control.dataset.configAction;
+      const url = action === "whatsapp" ? SITE_CONFIG.whatsappCommunityUrl : SITE_CONFIG.givingUrl;
+      if (!url) {
+        showToast(action === "whatsapp"
+          ? "Pozývací odkaz WhatsApp komunity doplní správca webu v SITE_CONFIG."
+          : "Údaje alebo odkaz na podporu zboru doplní správca webu v SITE_CONFIG.");
+        return;
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    }));
+
+    const applyTheme = (theme) => {
+      selectedTheme = theme;
+      $("#domov").dataset.theme = theme;
+      localStorage.setItem(STORAGE.theme, theme);
+      $$('[data-theme-choice]').forEach(button => button.classList.toggle("is-active", button.dataset.themeChoice === theme));
+    };
+    $$('[data-theme-choice]').forEach(button => button.addEventListener("click", () => { applyTheme(button.dataset.themeChoice); showToast("Farebný filter úvodných fotografií bol zmenený."); }));
+
+    $("#resetDemoData").addEventListener("click", () => {
+      announcements = structuredClone(defaultAnnouncements);
+      customEvents = [];
+      saveJSON(STORAGE.announcements, announcements);
+      saveJSON(STORAGE.events, customEvents);
+      applyTheme("default");
+      renderAnnouncements();
+      renderAdminEvents();
+      renderCalendar();
+      resetAnnouncementForm();
+      resetEventForm();
+      showToast("Demo dáta boli obnovené.");
+    });
+
+
+    /* Bootstrap modal: reuse one accessible modal for all gallery photographs. */
+    const galleryModal = $("#galleryModal");
+    if (galleryModal) {
+      galleryModal.addEventListener("show.bs.modal", event => {
+        const trigger = event.relatedTarget;
+        if (!trigger) return;
+        const image = $("#galleryModalImage");
+        image.src = trigger.dataset.gallerySrc || "";
+        image.alt = trigger.dataset.galleryAlt || "Fotografia zo života zboru";
+        $("#galleryModalLabel").textContent = trigger.querySelector("strong")?.textContent || "Fotografia zo života zboru";
+      });
+    }
+
+    /* =========================================================
+       8. INITIAL RENDER
+       ========================================================= */
+    applyTheme(selectedTheme);
+    resetAnnouncementForm();
+    resetEventForm();
+    renderAnnouncements();
+    renderAdminEvents();
+    renderCalendar();
+  </script>
+</body>
+</html>
