@@ -112,6 +112,12 @@
       ,"Plagát je príliš veľký na demo localStorage. Skúste menší obrázok.": "The poster is too large for demo localStorage. Try a smaller image."
       ,"Oznam sa nepodarilo uložiť. Úložisko prehliadača môže byť plné.": "The notice could not be saved. Browser storage may be full."
       ,"s plagátom": "with poster"
+      ,"Viac informácií – Deti": "More information – Children"
+      ,"Viac informácií – Dorast a mládež": "More information – Teenagers and youth"
+      ,"Viac informácií – Modlitby": "More information – Prayer"
+      ,"Viac informácií – Dospelí a rodiny": "More information – Adults and families"
+      ,"Viac informácií – Hudba a médiá": "More information – Music and media"
+      ,"Viac informácií – Pomoc a sprevádzanie": "More information – Help and guidance"
     });
 
     const LANGUAGE_STORAGE_KEY = "ecavlh-language-v1";
@@ -196,6 +202,172 @@
         schedule: { sk: "Podľa osobnej dohody", en: "By personal arrangement" },
         location: { sk: "Farský úrad alebo dohodnuté miesto", en: "Church office or an agreed location" },
         description: { sk: "Rozhovor, duchovné sprevádzanie, návšteva chorých alebo príprava sviatostí a obradov.", en: "Conversation, spiritual guidance, visits to the sick, or preparation for sacraments and ceremonies." }
+      }
+    ];
+
+    /*
+      ROZKLIKÁVACIE OBLASTI „ŽIVOT ZBORU“
+      ------------------------------------
+      Každá položka má samostatný dlhší opis, voliteľnú fotografiu,
+      praktické body, kontakt a odkaz. Prázdna hodnota image znamená,
+      že sa detail zobrazí ako čisté textové okno bez fotografie.
+    */
+    const LIFE_AREAS = [
+      {
+        id: "children",
+        title: { sk: "Deti", en: "Children" },
+        lead: {
+          sk: "Bezpečný a radostný priestor, v ktorom deti objavujú vieru jazykom primeraným svojmu veku.",
+          en: "A safe and joyful space where children discover faith in a way appropriate to their age."
+        },
+        description: {
+          sk: [
+            "Detská besiedka prebieha počas nedeľných Služieb Božích. Biblické príbehy dopĺňajú rozhovory, piesne, hry a tvorivé aktivity.",
+            "Jednorazové rodinné podujatia, výlety alebo tábory sa zverejňujú medzi aktuálnymi oznamami a automaticky aj v kalendári."
+          ],
+          en: [
+            "The children’s programme runs during Sunday worship. Bible stories are accompanied by conversation, songs, games and creative activities.",
+            "One-off family events, trips and camps are published in current notices and automatically added to the calendar."
+          ]
+        },
+        highlights: {
+          sk: ["detská besiedka počas nedeľných bohoslužieb", "tvorivé a tematické aktivity", "rodinné podujatia podľa aktuálnych oznamov"],
+          en: ["children’s programme during Sunday worship", "creative and themed activities", "family events according to current notices"]
+        },
+        image: "",
+        imageAlt: { sk: "", en: "" },
+        contact: { label: "Farský úrad · lipt.hradok@ecav.sk", href: "mailto:lipt.hradok@ecav.sk?subject=Deti%20v%20zbore" },
+        action: { label: { sk: "Pozrieť detský program", en: "View the children’s programme" }, href: "#program" }
+      },
+      {
+        id: "youth",
+        title: { sk: "Dorast a mládež", en: "Teenagers and youth" },
+        lead: {
+          sk: "Priestor na priateľstvá, otázky, spoločné zážitky a osobný rast vo viere.",
+          en: "A place for friendship, questions, shared experiences and personal growth in faith."
+        },
+        description: {
+          sk: [
+            "Stretnutia dorastu a mládeže spájajú rozhovory o viere a živote s neformálnym programom, hudbou a spoločnými aktivitami.",
+            "Termíny sa môžu meniť podľa školského roka a pripravovaných akcií, preto sa zverejňujú v aktuálnych oznamoch."
+          ],
+          en: [
+            "Teen and youth gatherings combine conversations about faith and life with informal activities, music and time together.",
+            "Dates may change during the school year, so current gatherings are published in the notices."
+          ]
+        },
+        highlights: {
+          sk: ["pravidelné aj jednorazové stretnutia", "výlety, tábory a spoločné aktivity", "bezpečný priestor na otázky a rozhovor"],
+          en: ["regular and one-off gatherings", "trips, camps and shared activities", "a safe space for questions and conversation"]
+        },
+        image: "assets/images/konfirmacia-2026.webp",
+        imageAlt: { sk: "Mladí ľudia pri konfirmácii v roku 2026", en: "Young people at confirmation in 2026" },
+        contact: { label: "Farský úrad · lipt.hradok@ecav.sk", href: "mailto:lipt.hradok@ecav.sk?subject=Dorast%20a%20mládež" },
+        action: { label: { sk: "Pozrieť aktuálne oznamy", en: "View current notices" }, href: "#aktuality" }
+      },
+      {
+        id: "prayer",
+        title: { sk: "Modlitby", en: "Prayer" },
+        lead: {
+          sk: "Spoločná modlitba za zbor, rodiny, mesto aj konkrétne potreby ľudí.",
+          en: "Shared prayer for the congregation, families, the town and the specific needs of people."
+        },
+        description: {
+          sk: [
+            "Modlitebné spoločenstvo vytvára pokojný priestor pre vďačnosť, prosby aj vzájomné povzbudenie. Stretnutie býva v stredu podľa aktuálnych oznamov.",
+            "Ak nemôžete prísť osobne, modlitebnú prosbu môžete poslať e-mailom. S jej obsahom sa zaobchádza citlivo."
+          ],
+          en: [
+            "The prayer fellowship provides a calm space for gratitude, requests and mutual encouragement. It usually meets on Wednesdays according to current notices.",
+            "If you cannot attend in person, you may send a prayer request by email. Its content will be treated sensitively."
+          ]
+        },
+        highlights: {
+          sk: ["pravidelné spoločné modlitby", "možnosť poslať osobnú prosbu", "modlitby za zbor, mesto a rodiny"],
+          en: ["regular shared prayer", "the option to send a personal request", "prayer for the congregation, town and families"]
+        },
+        image: "assets/images/kostol-interier-kazatelnica.webp",
+        imageAlt: { sk: "Interiér evanjelického kostola – miesto modlitby", en: "Evangelical church interior – a place of prayer" },
+        contact: { label: "Poslať modlitebnú prosbu", href: "mailto:lipt.hradok@ecav.sk?subject=Modlitebná%20prosba" },
+        action: { label: { sk: "Napísať modlitebnú prosbu", en: "Send a prayer request" }, href: "mailto:lipt.hradok@ecav.sk?subject=Modlitebná%20prosba" }
+      },
+      {
+        id: "families",
+        title: { sk: "Dospelí a rodiny", en: "Adults and families" },
+        lead: {
+          sk: "Stretnutia, pri ktorých sa prepája duchovný rast, vzťahy a každodenný rodinný život.",
+          en: "Gatherings that connect spiritual growth, relationships and everyday family life."
+        },
+        description: {
+          sk: [
+            "Dospelí a rodiny sa stretávajú pri biblickom vzdelávaní, tematických večeroch a spoločných podujatiach. Súčasťou života zboru sú aj stretnutia mužov.",
+            "Jednorazové rodinné akcie a konkrétne termíny sa zobrazujú v oznamoch a v spoločnom kalendári."
+          ],
+          en: [
+            "Adults and families meet for Bible learning, themed evenings and shared events. Men’s gatherings are also part of congregational life.",
+            "One-off family events and exact dates appear in the notices and shared calendar."
+          ]
+        },
+        highlights: {
+          sk: ["biblické a tematické stretnutia", "aktivity pre manželov a rodiny", "stretnutia mužov a spoločné podujatia"],
+          en: ["Bible and themed gatherings", "activities for couples and families", "men’s gatherings and shared events"]
+        },
+        image: "assets/images/kostol-exterier.webp",
+        imageAlt: { sk: "Budova cirkevného zboru ECAV Liptovský Hrádok", en: "ECAV Liptovský Hrádok congregation building" },
+        contact: { label: "Farský úrad · lipt.hradok@ecav.sk", href: "mailto:lipt.hradok@ecav.sk?subject=Dospelí%20a%20rodiny" },
+        action: { label: { sk: "Pozrieť program stretnutí", en: "View the gathering programme" }, href: "#program" }
+      },
+      {
+        id: "music",
+        title: { sk: "Hudba a médiá", en: "Music and media" },
+        lead: {
+          sk: "Hudba, zvuk, obraz a zborové médiá pomáhajú zrozumiteľne niesť posolstvo ďalej.",
+          en: "Music, sound, visuals and congregational media help carry the message further."
+        },
+        description: {
+          sk: [
+            "Do tejto oblasti patrí spev a hudobná služba počas bohoslužieb a podujatí, technické zabezpečenie zvuku a obrazu aj príprava mediálneho obsahu.",
+            "Zborový časopis, fotografie a audionahrávky zachytávajú život spoločenstva a vytvárajú jeho spoločnú pamäť."
+          ],
+          en: [
+            "This area includes singing and music during worship and events, technical support for sound and visuals, and the preparation of media content.",
+            "The congregation magazine, photographs and audio recordings capture community life and preserve its shared memory."
+          ]
+        },
+        highlights: {
+          sk: ["spev a hudobná služba", "ozvučenie, projekcia a technická pomoc", "zborový časopis, fotografie a nahrávky"],
+          en: ["singing and music ministry", "sound, projection and technical support", "congregation magazine, photographs and recordings"]
+        },
+        image: "assets/images/kostol-interier-lod.webp",
+        imageAlt: { sk: "Interiér kostola, v ktorom prebieha hudobná služba", en: "Church interior where music ministry takes place" },
+        contact: { label: "Farský úrad · lipt.hradok@ecav.sk", href: "mailto:lipt.hradok@ecav.sk?subject=Hudba%20a%20médiá" },
+        action: { label: { sk: "Otvoriť dokumenty a časopis", en: "Open documents and magazine" }, href: "#dokumenty" }
+      },
+      {
+        id: "care",
+        title: { sk: "Pomoc a sprevádzanie", en: "Help and guidance" },
+        lead: {
+          sk: "Osobný rozhovor, duchovná podpora a praktická blízkosť v náročnom životnom období.",
+          en: "Personal conversation, spiritual support and practical companionship during a difficult season of life."
+        },
+        description: {
+          sk: [
+            "Na farský úrad sa môžete obrátiť pri chorobe, zármutku, rodinnej situácii alebo potrebe osobného a duchovného rozhovoru.",
+            "Podľa možností zbor sprostredkuje návštevu, pastorálny rozhovor alebo nasmerovanie k vhodnej forme ďalšej pomoci."
+          ],
+          en: [
+            "You may contact the church office in times of illness, grief, family difficulty or when you need a personal and spiritual conversation.",
+            "Where possible, the congregation can arrange a visit, pastoral conversation or guidance towards an appropriate form of further help."
+          ]
+        },
+        highlights: {
+          sk: ["pastorálny a dôverný rozhovor", "návšteva chorých a sprevádzanie zarmútených", "dohoda ďalšej pomoci podľa konkrétnej situácie"],
+          en: ["pastoral and confidential conversation", "visiting the sick and supporting the bereaved", "arranging further help according to the situation"]
+        },
+        image: "",
+        imageAlt: { sk: "", en: "" },
+        contact: { label: "+421 918 828 303", href: "tel:+421918828303" },
+        action: { label: { sk: "Otvoriť kontakty", en: "Open contact details" }, href: "#kontakt" }
       }
     ];
 
@@ -1177,6 +1349,47 @@
         $("#meetingModalSchedule").textContent = getValue("meetingSchedule");
         $("#meetingModalLocation").textContent = getValue("meetingLocation");
         $("#meetingModalDescription").textContent = getValue("meetingDescription");
+      });
+    }
+
+    /* Bootstrap modal: expanded profile for every area in “Život zboru”. */
+    const lifeModal = $("#lifeModal");
+    if (lifeModal) {
+      lifeModal.addEventListener("show.bs.modal", event => {
+        const area = LIFE_AREAS.find(item => item.id === event.relatedTarget?.dataset.lifeId);
+        if (!area) return;
+
+        const image = safeImageSrc(area.image);
+        const layout = $("#lifeModalLayout");
+        const photoWrap = $("#lifeModalPhotoWrap");
+        const photo = $("#lifeModalPhoto");
+
+        photoWrap.hidden = !image;
+        layout.classList.toggle("is-text-only", !image);
+        if (image) {
+          photo.src = image;
+          photo.alt = localized(area.imageAlt);
+        } else {
+          photo.removeAttribute("src");
+          photo.alt = "";
+        }
+
+        $("#lifeModalTitle").textContent = localized(area.title);
+        $("#lifeModalLead").textContent = localized(area.lead);
+        $("#lifeModalDescription").innerHTML = localized(area.description)
+          .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+          .join("");
+        $("#lifeModalHighlights").innerHTML = localized(area.highlights)
+          .map(item => `<li>${escapeHTML(item)}</li>`)
+          .join("");
+
+        const contact = $("#lifeModalContact");
+        contact.textContent = area.contact.label;
+        contact.href = safeHref(area.contact.href);
+
+        const action = $("#lifeModalAction");
+        action.textContent = localized(area.action.label);
+        action.href = safeHref(area.action.href);
       });
     }
 

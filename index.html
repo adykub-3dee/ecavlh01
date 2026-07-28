@@ -294,15 +294,46 @@
 <p class="section-lead">Cirkevný zbor nie je iba nedeľné stretnutie. Je to priestor pre rast, priateľstvá, službu a praktickú pomoc.</p>
 </div>
 <div class="life-grid">
-<article class="life-card reveal" data-number="01"><span class="life-card__icon">☺</span><h3>Deti</h3><p>Detská besiedka, tvorivé aktivity a priestor, kde deti primerane svojmu veku spoznávajú biblické príbehy.</p></article>
-<article class="life-card reveal" data-number="02"><span class="life-card__icon">↗</span><h3>Dorast a mládež</h3><p>Stretnutia mladých, výlety, tábory, rozhovory a hľadanie odpovedí na dôležité životné otázky.</p></article>
-<article class="life-card reveal" data-number="03"><span class="life-card__icon">✦</span><h3>Modlitby</h3><p>Modlitebné spoločenstvo je jedným z dôležitých pilierov života zboru a pravidelne sa stretáva v stredu.</p></article>
-<article class="life-card reveal" data-number="04"><span class="life-card__icon">◎</span><h3>Dospelí a rodiny</h3><p>Biblické vzdelávanie, rodinné aktivity, stretnutia mužov a ďalšie príležitosti na budovanie vzťahov.</p></article>
-<article class="life-card reveal" data-number="05"><span class="life-card__icon">♫</span><h3>Hudba a médiá</h3><p>Spev, hudobná služba, audionahrávky, zborový časopis a zachytávanie života spoločenstva.</p></article>
-<article class="life-card reveal" data-number="06"><span class="life-card__icon">♡</span><h3>Pomoc a sprevádzanie</h3><p>Pastorálna starostlivosť, sprevádzanie zarmútených a praktická pomoc ľuďom v náročných obdobiach.</p></article>
+<article class="life-card reveal" data-number="01" id="life-children"><span class="life-card__icon">☺</span><h3>Deti</h3><p>Detská besiedka, tvorivé aktivity a priestor, kde deti primerane svojmu veku spoznávajú biblické príbehy.</p><span class="life-card__more">Viac informácií <span aria-hidden="true">→</span></span><button aria-label="Viac informácií – Deti" class="life-card__trigger" data-bs-target="#lifeModal" data-bs-toggle="modal" data-life-id="children" type="button"></button></article>
+<article class="life-card reveal" data-number="02" id="life-youth"><span class="life-card__icon">↗</span><h3>Dorast a mládež</h3><p>Stretnutia mladých, výlety, tábory, rozhovory a hľadanie odpovedí na dôležité životné otázky.</p><span class="life-card__more">Viac informácií <span aria-hidden="true">→</span></span><button aria-label="Viac informácií – Dorast a mládež" class="life-card__trigger" data-bs-target="#lifeModal" data-bs-toggle="modal" data-life-id="youth" type="button"></button></article>
+<article class="life-card reveal" data-number="03" id="life-prayer"><span class="life-card__icon">✦</span><h3>Modlitby</h3><p>Modlitebné spoločenstvo je jedným z dôležitých pilierov života zboru a pravidelne sa stretáva v stredu.</p><span class="life-card__more">Viac informácií <span aria-hidden="true">→</span></span><button aria-label="Viac informácií – Modlitby" class="life-card__trigger" data-bs-target="#lifeModal" data-bs-toggle="modal" data-life-id="prayer" type="button"></button></article>
+<article class="life-card reveal" data-number="04" id="life-families"><span class="life-card__icon">◎</span><h3>Dospelí a rodiny</h3><p>Biblické vzdelávanie, rodinné aktivity, stretnutia mužov a ďalšie príležitosti na budovanie vzťahov.</p><span class="life-card__more">Viac informácií <span aria-hidden="true">→</span></span><button aria-label="Viac informácií – Dospelí a rodiny" class="life-card__trigger" data-bs-target="#lifeModal" data-bs-toggle="modal" data-life-id="families" type="button"></button></article>
+<article class="life-card reveal" data-number="05" id="life-music"><span class="life-card__icon">♫</span><h3>Hudba a médiá</h3><p>Spev, hudobná služba, audionahrávky, zborový časopis a zachytávanie života spoločenstva.</p><span class="life-card__more">Viac informácií <span aria-hidden="true">→</span></span><button aria-label="Viac informácií – Hudba a médiá" class="life-card__trigger" data-bs-target="#lifeModal" data-bs-toggle="modal" data-life-id="music" type="button"></button></article>
+<article class="life-card reveal" data-number="06" id="life-care"><span class="life-card__icon">♡</span><h3>Pomoc a sprevádzanie</h3><p>Pastorálna starostlivosť, sprevádzanie zarmútených a praktická pomoc ľuďom v náročných obdobiach.</p><span class="life-card__more">Viac informácií <span aria-hidden="true">→</span></span><button aria-label="Viac informácií – Pomoc a sprevádzanie" class="life-card__trigger" data-bs-target="#lifeModal" data-bs-toggle="modal" data-life-id="care" type="button"></button></article>
 </div>
 </div>
 </section>
+<div aria-labelledby="lifeModalTitle" class="modal fade life-modal" id="lifeModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<div>
+<span class="life-modal__eyebrow">Život zboru</span>
+<h2 class="modal-title" id="lifeModalTitle">Spoločenstvo</h2>
+</div>
+<button aria-label="Zavrieť" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<div class="life-modal__layout" id="lifeModalLayout">
+<figure class="life-modal__photo" id="lifeModalPhotoWrap"><img alt="" id="lifeModalPhoto" loading="lazy" src="assets/images/kostol-interier-lod.webp"/></figure>
+<div class="life-modal__content">
+<p class="life-modal__lead" id="lifeModalLead"></p>
+<div class="life-modal__description" id="lifeModalDescription"></div>
+<ul class="life-modal__highlights" id="lifeModalHighlights"></ul>
+<div class="life-modal__contact">
+<span>Kontakt</span>
+<a href="#kontakt" id="lifeModalContact">Farský úrad</a>
+</div>
+<div class="life-modal__actions">
+<a class="button button--small" data-bs-dismiss="modal" href="#kontakt" id="lifeModalAction">Viac informácií</a>
+<a class="button button--ghost button--small" data-bs-dismiss="modal" href="#kontakt">Kontaktovať zbor</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <section class="section" id="prakticke">
 <div class="container">
 <div class="section-heading section-heading--center">
@@ -466,7 +497,7 @@
 <p>Spoločenstvo viery, modlitby a služby otvorené deťom, mladým, rodinám, dospelým aj seniorom.</p>
 </div>
 <div class="footer-col"><h3>Web</h3><a href="#stale-oznamy">Stále po ruke</a><a href="#aktuality">Aktuality</a><a href="#kalendar">Kalendár</a><a href="#program">Program</a><a href="#o-nas">O našom zbore</a></div>
-<div class="footer-col"><h3>Život zboru</h3><a href="#zivot-zboru">Deti</a><a href="#zivot-zboru">Mládež</a><a href="#zivot-zboru">Dospelí</a><a href="#prakticke">Sviatosti a obrady</a></div>
+<div class="footer-col"><h3>Život zboru</h3><a href="#life-children">Deti</a><a href="#life-youth">Mládež</a><a href="#life-families">Dospelí</a><a href="#prakticke">Sviatosti a obrady</a></div>
 <div class="footer-col"><h3>CMŠ Koráb</h3><a href="#korab">O škôlke</a><a href="https://cms-korab.sk/" rel="noopener noreferrer" target="_blank">Web školy ↗</a><a href="mailto:cmskorab@gmail.com">cmskorab@gmail.com</a><a href="tel:+421918828184">+421 918 828 184</a></div>
 
 <div class="footer-col"><h3>Kontakt</h3><a href="mailto:lipt.hradok@ecav.sk">lipt.hradok@ecav.sk</a><a href="tel:+421918828303">+421 918 828 303</a><a href="#kontakt">Hviezdoslavova 142</a></div>

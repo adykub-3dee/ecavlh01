@@ -118,7 +118,39 @@ Nie je to produkčne zabezpečené prihlasovanie ani databáza.
 - Obsah zadaný správcom sa uloží v jazyku, v ktorom bol napísaný.
 
 ============================================================
-6. HLAVNÉ SÚBORY
+6. ROZKLIKÁVACIA SEKCIA „ŽIVOT ZBORU“
+============================================================
+
+Karty Deti, Dorast a mládež, Modlitby, Dospelí a rodiny,
+Hudba a médiá a Pomoc a sprevádzanie zostávajú v pôvodnej
+trojstĺpcovej vizuálnej mriežke.
+
+Celá karta je klikateľné a klávesnicou ovládateľné tlačidlo.
+Kliknutím sa otvorí responzívne Bootstrap 5 modal okno.
+
+Detail každej oblasti môže obsahovať:
+- stručnú úvodnú vetu,
+- viac odsekov širšieho opisu,
+- praktické body alebo typické aktivity,
+- voliteľnú fotografiu,
+- priamy e-mailový alebo telefonický kontakt,
+- tlačidlo na program, oznamy, dokumenty alebo kontakty.
+
+Na mobile sa fotografia presunie nad text. Ak položka nemá
+fotografiu, okno sa automaticky zobrazí ako textové bez
+prázdneho miesta.
+
+Obsah sa upravuje v zozname LIFE_AREAS v assets/js/app.js.
+Každá položka má slovenskú a anglickú verziu textov. Hodnota
+image môže byť prázdna alebo môže obsahovať bezpečnú cestu
+napríklad assets/images/deti.webp.
+
+Táto sekcia zatiaľ nie je napojená na demo administráciu.
+Pri budúcom CMS je vhodné spravovať jej položky ako samostatný
+typ obsahu „Oblasti zboru“.
+
+============================================================
+7. HLAVNÉ SÚBORY
 ============================================================
 
 index.html
@@ -140,7 +172,7 @@ POPIS-A-FUNKCIONALITA.txt
 - tento podrobný popis
 
 ============================================================
-7. NAHRATIE DO GITHUB REPOZITÁRA
+8. NAHRATIE DO GITHUB REPOZITÁRA
 ============================================================
 
 1. Rozbaľte ZIP balík.
@@ -154,7 +186,7 @@ Web nevyžaduje npm ani zostavenie. Bootstrap 5.3.8 sa načítava
 cez jsDelivr CDN.
 
 ============================================================
-8. PRED OSTRÝM NASADENÍM
+9. PRED OSTRÝM NASADENÍM
 ============================================================
 
 - potvrdiť kontakty, funkcie a pravidelné termíny,

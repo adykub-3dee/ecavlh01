@@ -34,6 +34,8 @@ POPIS-A-FUNKCIONALITA.txt
 - plagát možno v deme nahrať zo zariadenia alebo zadať jeho cestu/URL,
 - filtre oddeľujú všetky oznamy, aktuálne akcie a dlhodobé oznamy,
 - na mobile sa dá prepnúť medzi najbližšími udalosťami a mesačným kalendárom,
+- všetkých šesť kariet v sekcii „Život zboru“ je rozklikávacích,
+- detail oblasti môže obsahovať dlhší opis, praktické body, voliteľnú fotografiu, kontakt a odkaz,
 - pod kontaktmi je rozbaľovacia organizačná štruktúra zboru,
 - logo, CSS a JavaScript sú oddelené od HTML,
 - úvodný carousel má ovládanie pozastavenia a rešpektuje obmedzenie pohybu v systéme,
@@ -42,6 +44,7 @@ POPIS-A-FUNKCIONALITA.txt
 ## Kde upravovať obsah
 
 - pravidelný program: `REGULAR_MEETINGS` v `assets/js/app.js`,
+- rozklikávacie oblasti Deti, Dorast a mládež, Modlitby, Dospelí a rodiny, Hudba a médiá a Pomoc a sprevádzanie: `LIFE_AREAS` v `assets/js/app.js`,
 - predvolené oznamy: `defaultAnnouncements` v `assets/js/app.js`,
 - WhatsApp a podpora zboru: `SITE_CONFIG` v `assets/js/app.js`,
 - organizačná štruktúra a kontakty: sekcia `#kontakt` v `index.html`,
