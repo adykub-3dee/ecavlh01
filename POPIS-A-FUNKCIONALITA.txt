@@ -1,0 +1,165 @@
+ECAV LIPTOVSKÝ HRÁDOK – POPIS A FUNKCIONALITA WEBU
+Verzia balíka: oznamy, plagáty a kalendár
+Bootstrap: 5.3.8
+
+============================================================
+1. HLAVNÁ MYŠLIENKA OZNAMOV
+============================================================
+
+Sekcia „Oznamy a pozvánky na jednom mieste“ používa spoločnú
+responzívnu mriežku so štyrmi stĺpcami na veľkom monitore.
+
+Každá karta má jeden z dvoch typov:
+
+A) DLHODOBÝ OZNAM
+- Príklady: cirkevná daň, sviatosti a obrady, dokumenty.
+- Nie je zapisovaný do kalendára.
+- Môže byť zobrazený neobmedzene alebo iba do určeného dátumu.
+- Môže obsahovať plagát/obrázok, text a voliteľný odkaz.
+
+B) JEDNORAZOVÁ AKCIA
+- Príklady: víkendová akcia, koncert, prednáška, výlet.
+- Má dátum začiatku, voliteľný dátum konca, čas a miesto.
+- Automaticky sa zapíše do kalendára.
+- Viacdňová akcia sa zobrazuje v každom dni svojho trvania.
+- Po skončení sa karta automaticky skryje z verejnej sekcie.
+- V minulých dátumoch kalendára však zostane zachovaná.
+- Môže obsahovať plagát/obrázok a registračný odkaz.
+
+Návštevník môže karty filtrovať:
+- Všetky
+- Aktuálne akcie
+- Dlhodobé oznamy
+
+Kliknutím na „Podrobnosti“ sa otvorí väčšie Bootstrap okno.
+V ňom je celý plagát, dátum, čas, miesto, popis, odkaz a pri
+akcii aj tlačidlo „Zobraziť v kalendári“.
+
+============================================================
+2. PREPOJENIE S KALENDÁROM
+============================================================
+
+Kalendár spája tri zdroje:
+
+1. pravidelné stretnutia zo zoznamu REGULAR_MEETINGS,
+2. jednorazové akcie vytvorené medzi oznamami,
+3. samostatné udalosti z administračnej karty „Udalosti“.
+
+Ak má byť podujatie zároveň verejnou kartou s plagátom,
+vytvorte ho ako „Jednorazová akcia“ v karte Oznamy.
+
+Ak má byť udalosť iba v kalendári a nepotrebuje verejnú kartu,
+použite samostatnú kartu „Udalosti“.
+
+Takto nevznikajú dve ručne vytvorené kópie tej istej akcie.
+
+============================================================
+3. PLAGÁTY A OBRÁZKY
+============================================================
+
+Demo administrácia ponúka dve možnosti:
+
+A) Vybrať obrázok zo zariadenia
+- Podporované: JPG, PNG a WebP.
+- Odporúčaný vstup je najviac 5 MB.
+- Prehliadač obrázok zmenší približne na maximálny rozmer
+  1200 px a uloží ho vo formáte WebP.
+- Výsledok sa uloží do localStorage daného prehliadača.
+
+B) Zadať cestu alebo URL
+- Lokálny príklad: assets/images/plagat.webp
+- Online príklad: https://example.sk/plagat.webp
+- Toto je vhodnejšie pre ostrý web a väčší počet plagátov.
+
+DÔLEŽITÉ:
+Nahratie súboru v tejto demo administrácii neodošle obrázok
+na GitHub ani na server. Uvidí ho iba prehliadač, v ktorom bol
+pridaný. LocalStorage má obmedzenú kapacitu.
+
+Pre produkčnú administráciu treba plagáty ukladať do CMS,
+databázy alebo cloudového úložiska a do oznamu uložiť ich URL.
+
+============================================================
+4. DEMO ADMINISTRÁCIA
+============================================================
+
+Koliesko v hlavičke zostalo zachované.
+
+Karta „Oznamy“ umožňuje:
+- vybrať typ Dlhodobý oznam / Jednorazová akcia,
+- zadať kategóriu, nadpis a text,
+- pri akcii zadať dátum od–do, čas a miesto,
+- pri dlhodobom ozname zadať dátum platnosti,
+- nahrať plagát alebo zadať jeho cestu/URL,
+- pridať text a cieľ odkazu,
+- existujúce položky upravovať a mazať.
+
+Karta „Udalosti“ pridáva udalosti iba do kalendára.
+
+Karta „Vzhľad“ mení farebný filter úvodných fotografií.
+
+Všetky zmeny demo administrácie sa ukladajú do localStorage.
+Nie je to produkčne zabezpečené prihlasovanie ani databáza.
+
+============================================================
+5. AUTOMATICKÉ SPRÁVANIE
+============================================================
+
+- Dlhodobý oznam bez dátumu zostáva zobrazený neobmedzene.
+- Dlhodobý oznam s dátumom sa po tomto dátume skryje.
+- Akcia sa zobrazuje do dátumu svojho skončenia.
+- Akcia sa automaticky pridá do kalendára.
+- Minulé akcie ostávajú dohľadateľné v minulosti kalendára.
+- Oznamy sa na veľkej obrazovke zobrazujú v štyroch stĺpcoch,
+  na tablete v dvoch a na mobile v jednom.
+- Detail plagátu je responzívny a používa Bootstrap modal.
+- Mobilný kalendár má prepínač Najbližšie / Mesačný kalendár.
+- SK/EN prepínač prekladá statické rozhranie.
+- Obsah zadaný správcom sa uloží v jazyku, v ktorom bol napísaný.
+
+============================================================
+6. HLAVNÉ SÚBORY
+============================================================
+
+index.html
+- štruktúra stránky, modálne okná a demo administračné formuláre
+
+assets/css/styles.css
+- kompletný vzhľad, štvorstĺpcové karty a responzivita
+
+assets/js/app.js
+- dáta, oznamy, kalendár, filtre, plagáty a localStorage
+
+assets/images/
+- logo a fotografie webu
+
+README.md
+- stručný návod na nahratie a úpravy
+
+POPIS-A-FUNKCIONALITA.txt
+- tento podrobný popis
+
+============================================================
+7. NAHRATIE DO GITHUB REPOZITÁRA
+============================================================
+
+1. Rozbaľte ZIP balík.
+2. Otvorte priečinok ecavlh01-announcements-calendar.
+3. Nahrajte jeho obsah priamo do koreňa repozitára.
+4. Pri existujúcich súboroch potvrďte nahradenie.
+5. Zachovajte priečinky assets/css, assets/js a assets/images.
+6. Po publikovaní obnovte stránku bez cache.
+
+Web nevyžaduje npm ani zostavenie. Bootstrap 5.3.8 sa načítava
+cez jsDelivr CDN.
+
+============================================================
+8. PRED OSTRÝM NASADENÍM
+============================================================
+
+- potvrdiť kontakty, funkcie a pravidelné termíny,
+- doplniť presné údaje k cirkevnej dani,
+- doplniť WhatsApp odkaz a údaje podpory zboru v SITE_CONFIG,
+- nahradiť localStorage reálnym CMS/API a autentifikáciou,
+- pripojiť plagáty, dokumenty a galériu k úložisku,
+- vyriešiť GDPR, formuláre, antispam, zálohy a monitoring.

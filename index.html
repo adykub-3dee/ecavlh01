@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<html lang="sk">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Cirkevný zbor ECAV Liptovský Hrádok – aktuálne oznamy, kalendár, pravidelné stretnutia, dokumenty a kontakty." name="description"/>
+<meta content="#173d35" name="theme-color"/>
+<title>ECAV Liptovský Hrádok | Spoločenstvo viery</title>
+<link href="https://www.ecavlh.sk/" rel="canonical"/>
+<link href="assets/images/ecav-logo.png" rel="icon" type="image/png"/>
+<link href="assets/images/ecav-logo.png" rel="apple-touch-icon"/>
+<meta content="website" property="og:type"/>
+<meta content="sk_SK" property="og:locale"/>
+<meta content="ECAV Liptovský Hrádok | Spoločenstvo viery" property="og:title"/>
+<meta content="Aktuálne oznamy, kalendár, pravidelné stretnutia, dokumenty a kontakty cirkevného zboru." property="og:description"/>
+<meta content="https://www.ecavlh.sk/" property="og:url"/>
+<meta content="https://www.ecavlh.sk/assets/images/kostol-exterier.webp" property="og:image"/>
+<!-- Bootstrap 5.3.8: grid, responsive navbar/collapse, carousel, meeting modal and utilities -->
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" rel="stylesheet"/>
+<!--
+    ECAV LIPTOVSKÝ HRÁDOK — FUNKČNÝ HTML KONCEPT
+    ------------------------------------------------
+    Účel: dizajnový prototyp bez databázy, pripravený na odovzdanie realizačnej firme.
+    Závislosti: Bootstrap 5.3.8 cez CDN; lokálne optimalizované fotografie v assets/images.
+    Dáta: ukážkovo uložené v JavaScripte a localStorage pre demo administráciu.
+
+    Verejné zdroje obsahu (overené 15. 7. 2026 cez indexované stránky pôvodného webu):
+    - https://www.ecavlh.sk/
+    - https://www.ecavlh.sk/aktualne
+    - https://www.ecavlh.sk/kontakt
+    - https://www.ecavlh.sk/deti
+    - https://www.ecavlh.sk/dospeli
+    - https://www.ecavlh.sk/dokumenty
+    - https://www.ecavlh.sk/minulost
+    - https://www.ecavlh.sk/obrady-a-suvisiace-sluzby
+
+    DÔLEŽITÉ PRE REALIZAČNÚ FIRMU:
+    1. Pred ostrým nasadením znova overiť osoby, telefónne čísla a pravidelné termíny.
+    2. Nahradiť localStorage databázou/CMS a zaviesť reálne prihlasovanie.
+    3. Dokumenty a mediálne súbory pripojiť k vybranému úložisku (Google Drive API / cloud storage).
+    4. Doplniť GDPR dokumentáciu, cookies podľa reálne nasadených služieb a antispam formulárov.
+    5. Bootstrap je použitý pre responzívnu navigáciu, carousel, modal a utility; vlastné CSS zachováva originálny vizuál.
+    6. Oznamy používajú typ `persistent` (dlhodobý) alebo `event` (akcia automaticky prepojená s kalendárom).
+    7. WhatsApp a podpora zboru používajú centrálne odkazy v objekte SITE_CONFIG v assets/js/app.js.
+    8. Fotografie sú lokálne súbory vhodné pre GitHub Pages; neskôr ich možno nahradiť URL z CMS alebo Google Apps Script API.
+    9. Sekcia CMŠ Koráb odkazuje na samostatný web školy a používa verejne uvedené kontaktné údaje.
+   10. Externé odkazy sú zobrazené kompaktne v spodnej časti pätičky.
+   11. Pohyb fotografií rešpektuje prefers-reduced-motion a neovplyvňuje obsah ani ovládanie stránky.
+   12. Prepínač SK/EN používa klientský preklad statického rozhrania; budúci CMS má mať samostatné slovenské a anglické obsahové polia.
+  -->
+<link href="assets/css/styles.css" rel="stylesheet"/>
+</head>
+<body class="bootstrap-concept">
+<a class="visually-hidden-focusable skip-link" href="#main">Preskočiť na obsah</a>
+<header class="site-header navbar navbar-expand-xl p-0" id="siteHeader">
+<div class="container header-inner">
+<a aria-label="ECAV Liptovský Hrádok — domov" class="brand navbar-brand m-0" href="#domov">
+<span aria-hidden="true" class="brand-mark brand-mark--luther"><img alt="" class="brand-logo-image" src="assets/images/ecav-logo.png"/></span>
+<span class="brand-copy">
+<strong>ECAV Liptovský Hrádok</strong>
+<small>Cirkevný zbor</small>
+</span>
+</a>
+<nav aria-label="Hlavná navigácia" class="main-nav collapse navbar-collapse" id="mainNav">
+<ul class="navbar-nav align-items-lg-center">
+<li class="nav-item"><a class="nav-link" href="#aktuality">Aktuality</a></li>
+<li class="nav-item"><a class="nav-link" href="#kalendar">Kalendár</a></li>
+<li class="nav-item"><a class="nav-link" href="#program">Stretnutia</a></li>
+<li class="nav-item"><a class="nav-link" href="#zivot-zboru">Život zboru</a></li>
+<li class="nav-item"><a class="nav-link" href="#o-nas">O nás</a></li>
+<li class="nav-item"><a class="nav-link" href="#korab">CMŠ Koráb</a></li>
+<li class="nav-item"><a class="nav-link" href="#dokumenty">Dokumenty</a></li>
+<li class="nav-item"><a class="nav-link" href="#kontakt">Kontakt</a></li>
+</ul>
+</nav>
+<div class="header-actions"><div aria-label="Výber jazyka" class="language-switch" role="group">
+<button aria-pressed="true" class="language-button is-active" data-lang="sk" type="button">SK</button>
+<span aria-hidden="true">/</span>
+<button aria-pressed="false" class="language-button" data-lang="en" type="button">EN</button>
+</div>
+<button aria-label="Otvoriť demo administráciu" class="icon-button" id="adminOpenButton" title="Demo administrácia" type="button">⚙</button>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Otvoriť menu" class="icon-button menu-toggle navbar-toggler" data-bs-target="#mainNav" data-bs-toggle="collapse" id="menuToggle" type="button"><span aria-hidden="true">☰</span></button>
+</div>
+</div>
+</header>
+<main id="main">
+<section class="hero" data-theme="default" id="domov">
+<div aria-label="Fotografie kostola a života zboru" class="carousel slide carousel-fade hero-carousel" data-bs-interval="6500" data-bs-pause="hover" data-bs-ride="carousel" id="heroCarousel" role="region">
+<div class="carousel-indicators">
+<button aria-current="true" aria-label="Exteriér kostola" class="active" data-bs-slide-to="0" data-bs-target="#heroCarousel" type="button"></button>
+<button aria-label="Interiér kostola" data-bs-slide-to="1" data-bs-target="#heroCarousel" type="button"></button>
+<button aria-label="Konfirmácia" data-bs-slide-to="2" data-bs-target="#heroCarousel" type="button"></button>
+<button aria-label="Kazateľnica a oltár" data-bs-slide-to="3" data-bs-target="#heroCarousel" type="button"></button>
+</div>
+<div class="carousel-inner h-100">
+<div class="carousel-item active h-100"><img alt="" class="hero-media" fetchpriority="high" src="assets/images/kostol-exterier.webp"/></div>
+<div class="carousel-item h-100"><img alt="" class="hero-media" loading="eager" src="assets/images/kostol-interier-lod.webp"/></div>
+<div class="carousel-item h-100"><img alt="" class="hero-media" loading="lazy" src="assets/images/konfirmacia-2026.webp"/></div>
+<div class="carousel-item h-100"><img alt="" class="hero-media" loading="lazy" src="assets/images/kostol-interier-kazatelnica.webp"/></div>
+</div>
+<button class="carousel-control-prev hero-carousel-control" data-bs-slide="prev" data-bs-target="#heroCarousel" tabindex="-1" type="button"><span aria-hidden="true" class="carousel-control-prev-icon"></span><span class="visually-hidden">Predchádzajúca fotografia</span></button>
+<button class="carousel-control-next hero-carousel-control" data-bs-slide="next" data-bs-target="#heroCarousel" tabindex="-1" type="button"><span aria-hidden="true" class="carousel-control-next-icon"></span><span class="visually-hidden">Nasledujúca fotografia</span></button>
+</div>
+<div aria-hidden="true" class="hero-shape"></div>
+<div class="container hero-grid position-relative">
+<div class="hero-copy">
+<div class="hero-kicker reveal">Evanjelický a. v. cirkevný zbor</div>
+<h1 class="hero-title reveal">Miesto pre <em>vieru, nádej</em> a spoločenstvo.</h1>
+<p class="hero-text reveal">Sme spoločenstvom ľudí v Liptovskom Hrádku, ktorí sa stretávajú pri Božom slove, modlitbe a službe druhým. Dvere sú otvorené pre všetky generácie.</p>
+<div class="hero-actions reveal">
+<a class="button" href="#kalendar">Pozrieť kalendár <span aria-hidden="true">→</span></a>
+<a class="button button--ghost" href="#kontakt">Ako nás nájdete</a>
+<button aria-pressed="false" class="button button--ghost hero-carousel-toggle" id="carouselPauseButton" type="button">Pozastaviť fotografie</button>
+</div>
+</div>
+<aside aria-label="Najbližšie pravidelné služby Božie" class="service-card reveal">
+<span class="service-card__label">Každú nedeľu</span>
+<div class="service-card__time">09:00</div>
+<p class="service-card__meta">Služby Božie<br/>Hviezdoslavova 142, Liptovský Hrádok</p>
+<div class="service-card__divider"></div>
+<div class="service-card__next">
+<div class="date-badge"><strong id="nextSundayDay">—</strong><span id="nextSundayMonth">—</span></div>
+<div>
+<strong id="nextSundayLabel">Najbližšia nedeľa</strong>
+<small>Detská besiedka prebieha súbežne o 09:00.</small>
+</div>
+</div>
+</aside>
+</div>
+</section>
+<nav aria-label="Rýchle odkazy" class="quick-links container">
+<div class="quick-grid reveal">
+<button class="quick-link" data-config-action="whatsapp" type="button"><span class="quick-icon">◉</span><span><strong>WhatsApp komunita</strong><small>Oznamy a život zboru v mobile</small></span></button>
+<a class="quick-link" href="#program"><span class="quick-icon">◷</span><span><strong>Pravidelný program</strong><small>Stretnutia počas týždňa</small></span></a>
+<a class="quick-link" href="#dokumenty"><span class="quick-icon">↓</span><span><strong>Dokumenty</strong><small>Správy a zborový časopis</small></span></a>
+<a class="quick-link" href="#kontakt"><span class="quick-icon">⌖</span><span><strong>Kontakt a mapa</strong><small>Farský úrad a vedenie</small></span></a>
+</div>
+</nav>
+
+
+
+<section class="section announcements-section-top" id="aktuality">
+<div class="container">
+<div class="section-heading">
+<span class="eyebrow">Aktuálne v zbore</span>
+<h2 class="section-title">Oznamy a pozvánky na jednom mieste.</h2>
+<p class="section-lead">Dlhodobo platné informácie aj aktuálne jednorazové akcie. Akcia sa automaticky zobrazí aj v kalendári a môže obsahovať plagát.</p>
+</div>
+<div class="notice-toolbar reveal">
+<div aria-label="Filtrovanie oznamov" class="notice-filters" role="group">
+<button aria-pressed="true" class="is-active" data-notice-filter="all" type="button">Všetky</button>
+<button aria-pressed="false" data-notice-filter="event" type="button">Aktuálne akcie</button>
+<button aria-pressed="false" data-notice-filter="persistent" type="button">Dlhodobé oznamy</button>
+</div>
+<span aria-live="polite" class="notice-count" id="noticeCount"></span>
+</div>
+<div aria-live="polite" class="notice-board-grid reveal" id="noticeBoard"></div>
+<div class="empty-state" hidden id="noticeBoardEmpty">V tejto kategórii momentálne nie je zverejnený žiadny oznam.</div>
+</div>
+</section>
+<div aria-labelledby="noticeModalTitle" class="modal fade notice-modal" id="noticeModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal-content">
+<button aria-label="Zavrieť" class="btn-close notice-modal__close" data-bs-dismiss="modal" type="button"></button>
+<div class="notice-modal__layout">
+<div class="notice-modal__poster" hidden id="noticeModalPosterWrap"><img alt="" id="noticeModalPoster"/></div>
+<div class="notice-modal__content">
+<span class="notice-modal__kind" id="noticeModalKind">Oznam</span>
+<h2 class="modal-title" id="noticeModalTitle">Oznam</h2>
+<div class="notice-modal__meta" id="noticeModalMeta"></div>
+<p id="noticeModalText"></p>
+<div class="notice-modal__actions">
+<a class="button button--small" data-bs-dismiss="modal" hidden id="noticeModalAction">Viac informácií</a>
+<a class="button button--ghost button--small" data-bs-dismiss="modal" hidden href="#kalendar" id="noticeModalCalendar">Zobraziť v kalendári</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section class="section section--compact permanent-section" id="stale-oznamy">
+<div class="container">
+<div class="section-heading">
+<span class="eyebrow">Stále po ruke</span>
+<h2 class="section-title">Rýchly kontakt a praktická pomoc.</h2>
+<p class="section-lead">Priame možnosti, ako sa spojiť so zborom. Dlhodobé oznamy, napríklad cirkevnú daň, nájdete spolu s aktuálnymi akciami vyššie.</p>
+</div>
+<div class="community-tools reveal" id="komunita">
+<article class="community-tool community-tool--primary">
+<span aria-hidden="true" class="community-tool__icon">◉</span>
+<h3>WhatsApp zborová komunita</h3>
+<p>Rýchle oznamy, pripomienky podujatí a praktické informácie priamo v mobile.</p>
+<button data-config-action="whatsapp" type="button">Pridať sa do komunity →</button>
+</article>
+<article class="community-tool">
+<span aria-hidden="true" class="community-tool__icon">♡</span>
+<h3>Modlitebná prosba</h3>
+<p>Pošlite prosbu o modlitbu alebo požiadajte o osobný rozhovor.</p>
+<a href="mailto:lipt.hradok@ecav.sk?subject=Modlitebná%20prosba">Napísať dôvernú správu →</a>
+</article>
+<article class="community-tool">
+<span aria-hidden="true" class="community-tool__icon">☎</span>
+<h3>Potrebujem pomoc</h3>
+<p>Pastorálny rozhovor, návšteva chorého alebo praktická otázka pre farský úrad.</p>
+<a href="tel:+421918828303">Zavolať na farský úrad →</a>
+</article>
+<article class="community-tool">
+<span aria-hidden="true" class="community-tool__icon">＋</span>
+<h3>Podpora zboru</h3>
+<p>Miesto pre číslo účtu, QR platbu alebo stránku s možnosťami podpory služby zboru.</p>
+<button data-config-action="giving" type="button">Zobraziť možnosti podpory →</button>
+</article>
+</div>
+</div>
+</section>
+<aside aria-label="Fotografie kostola a života zboru" class="photo-ribbon-wrap">
+<div class="container photo-ribbon reveal">
+<figure class="photo-slice"><img alt="Budova evanjelického kostola v Liptovskom Hrádku" data-parallax-strength="18" data-photo-parallax="" loading="eager" src="assets/images/kostol-exterier.webp"/><figcaption>Kostol v Liptovskom Hrádku</figcaption></figure>
+<figure class="photo-slice"><img alt="Kazateľnica a oltár v interiéri kostola" data-parallax-strength="28" data-photo-parallax="" loading="lazy" src="assets/images/kostol-interier-kazatelnica.webp"/><figcaption>Miesto slova</figcaption></figure>
+<figure class="photo-slice"><img alt="Konfirmačná slávnosť v kostole" data-parallax-strength="22" data-photo-parallax="" loading="lazy" src="assets/images/konfirmacia-2026.webp"/><figcaption>Živé spoločenstvo</figcaption></figure>
+<figure class="photo-slice"><img alt="Pohľad cez loď kostola k oltáru" data-parallax-strength="32" data-photo-parallax="" loading="lazy" src="assets/images/kostol-interier-lod.webp"/><figcaption>Priestor pokoja</figcaption></figure>
+</div>
+</aside>
+<section class="section section--forest" id="kalendar">
+<div class="container">
+<div class="section-heading">
+<span class="eyebrow">Kalendár</span>
+<h2 class="section-title">Kedy sa stretneme?</h2>
+<p class="section-lead">Kalendár zobrazuje pravidelný program, jednorazové akcie z oznamov aj samostatné udalosti. Kliknutím na deň zobrazíte jeho program.</p>
+</div>
+<div aria-label="Zobrazenie kalendára" class="calendar-view-switch" role="group">
+<button aria-pressed="true" class="is-active" data-calendar-view="upcoming" type="button">Najbližšie udalosti</button>
+<button aria-pressed="false" data-calendar-view="month" type="button">Mesačný kalendár</button>
+</div>
+<div class="calendar-shell calendar-view-upcoming reveal" id="calendarShell">
+<div class="calendar-main">
+<div class="calendar-toolbar">
+<h3 class="calendar-title" id="calendarTitle">Kalendár</h3>
+<div class="calendar-controls">
+<button aria-label="Predchádzajúci mesiac" class="icon-button" id="calendarPrev" type="button">←</button>
+<button class="icon-button" id="calendarToday" type="button">Dnes</button>
+<button aria-label="Nasledujúci mesiac" class="icon-button" id="calendarNext" type="button">→</button>
+</div>
+</div>
+<div aria-hidden="true" class="calendar-weekdays"><span>Po</span><span>Ut</span><span>St</span><span>Št</span><span>Pi</span><span>So</span><span>Ne</span></div>
+<div class="calendar-grid" id="calendarGrid"></div>
+</div>
+<aside aria-labelledby="eventPanelTitle" class="events-panel">
+<h3 id="eventPanelTitle">Najbližšie udalosti</h3>
+<p class="events-panel__subtitle" id="eventPanelSubtitle">Pravidelné aj jednorazové stretnutia</p>
+<div class="event-feed" id="eventFeed"></div>
+</aside>
+</div>
+</div>
+</section>
+<section class="section section--white program-section" id="program">
+<div class="container">
+<div class="section-heading section-heading--center">
+<span class="eyebrow">Pravidelný program</span>
+<h2 class="section-title">Týždeň v našom zbore.</h2>
+<p class="section-lead">Stručný prehľad pravidelných stretnutí. Pri každej položke si môžete otvoriť podrobnejšie informácie.</p>
+</div>
+<div aria-live="polite" class="program-grid" id="programGrid"></div>
+</div>
+</section>
+<div aria-labelledby="meetingModalTitle" class="modal fade meeting-modal" id="meetingModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<div>
+<span class="meeting-modal__eyebrow">Stretnutie v zbore</span>
+<h2 class="modal-title" id="meetingModalTitle">Stretnutie</h2>
+</div>
+<button aria-label="Zavrieť" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<div class="meeting-modal__meta">
+<div><span aria-hidden="true">◷</span><div><small>Kedy</small><strong id="meetingModalSchedule">—</strong></div></div>
+<div><span aria-hidden="true">⌖</span><div><small>Kde</small><strong id="meetingModalLocation">—</strong></div></div>
+</div>
+<div class="meeting-modal__description"><h3>Podrobnosti</h3><p id="meetingModalDescription"></p></div>
+<a class="button button--small" href="#kontakt" data-bs-dismiss="modal">Kontaktovať zbor</a>
+</div>
+</div>
+</div>
+</div>
+
+<section class="section section--forest" id="zivot-zboru">
+<div class="container">
+<div class="section-heading">
+<span class="eyebrow">Život zboru</span>
+<h2 class="section-title">Spoločenstvo pre každú generáciu.</h2>
+<p class="section-lead">Cirkevný zbor nie je iba nedeľné stretnutie. Je to priestor pre rast, priateľstvá, službu a praktickú pomoc.</p>
+</div>
+<div class="life-grid">
+<article class="life-card reveal" data-number="01"><span class="life-card__icon">☺</span><h3>Deti</h3><p>Detská besiedka, tvorivé aktivity a priestor, kde deti primerane svojmu veku spoznávajú biblické príbehy.</p></article>
+<article class="life-card reveal" data-number="02"><span class="life-card__icon">↗</span><h3>Dorast a mládež</h3><p>Stretnutia mladých, výlety, tábory, rozhovory a hľadanie odpovedí na dôležité životné otázky.</p></article>
+<article class="life-card reveal" data-number="03"><span class="life-card__icon">✦</span><h3>Modlitby</h3><p>Modlitebné spoločenstvo je jedným z dôležitých pilierov života zboru a pravidelne sa stretáva v stredu.</p></article>
+<article class="life-card reveal" data-number="04"><span class="life-card__icon">◎</span><h3>Dospelí a rodiny</h3><p>Biblické vzdelávanie, rodinné aktivity, stretnutia mužov a ďalšie príležitosti na budovanie vzťahov.</p></article>
+<article class="life-card reveal" data-number="05"><span class="life-card__icon">♫</span><h3>Hudba a médiá</h3><p>Spev, hudobná služba, audionahrávky, zborový časopis a zachytávanie života spoločenstva.</p></article>
+<article class="life-card reveal" data-number="06"><span class="life-card__icon">♡</span><h3>Pomoc a sprevádzanie</h3><p>Pastorálna starostlivosť, sprevádzanie zarmútených a praktická pomoc ľuďom v náročných obdobiach.</p></article>
+</div>
+</div>
+</section>
+<section class="section" id="prakticke">
+<div class="container">
+<div class="section-heading section-heading--center">
+<span class="eyebrow">Praktické informácie</span>
+<h2 class="section-title">Sviatosti, obrady a životné udalosti.</h2>
+<p class="section-lead">Jasné prvé informácie a jednoduchý kontakt na farský úrad. Konkrétny postup sa vždy dohodne osobne.</p>
+</div>
+<div class="practical-grid">
+<article class="practical-card reveal"><div class="practical-card__icon">✧</div><h3>Krst</h3><p>Informácie o príprave krstu dieťaťa alebo dospelého a dohodnutie termínu.</p><a href="mailto:lipt.hradok@ecav.sk?subject=Otázka%20k%20krstu">Napísať na farský úrad →</a></article>
+<article class="practical-card reveal"><div class="practical-card__icon">◇</div><h3>Konfirmácia</h3><p>Príprava mladých ľudí k osobnému vyznaniu viery a aktívnemu životu v cirkevnom zbore.</p><a href="mailto:lipt.hradok@ecav.sk?subject=Otázka%20ku%20konfirmácii">Získať informácie →</a></article>
+<article class="practical-card reveal"><div class="practical-card__icon">∞</div><h3>Sobáš</h3><p>Príprava cirkevného sobáša, potrebné dokumenty a dohoda termínu obradu.</p><a href="mailto:lipt.hradok@ecav.sk?subject=Otázka%20k%20sobášu">Kontaktovať zbor →</a></article>
+<article class="practical-card reveal"><div class="practical-card__icon">○</div><h3>Pohreb a sprevádzanie</h3><p>Dohodnutie pohrebného obradu a duchovná podpora rodiny v období zármutku.</p><a href="tel:+421918828303">Zavolať administrátorovi →</a></article>
+</div>
+</div>
+</section>
+<section class="section korab-section" id="korab">
+<div class="container">
+<div class="row g-5 align-items-center">
+<div class="col-lg-6">
+<div aria-label="Budova cirkevného zboru a areál CMŠ Koráb" class="korab-visual reveal" role="img">
+<div class="korab-photo-main"><img alt="Budova cirkevného zboru pri CMŠ Koráb" data-parallax-strength="24" data-photo-parallax="" loading="lazy" src="assets/images/kostol-exterier.webp"/></div>
+<div aria-hidden="true" class="korab-photo-crop"></div>
+<div class="korab-seal">CMŠ<br/>Koráb</div>
+</div>
+</div>
+<div class="col-lg-6">
+<div class="korab-copy reveal">
+<span class="eyebrow">Súčasť služby zboru</span>
+<h2 class="section-title">Cirkevná materská škola Koráb.</h2>
+<p class="section-lead">Škôlka vytvára pre deti bezpečné a podnetné prostredie. Štátny vzdelávací program dopĺňa o výchovu založenú na biblických príbehoch a kresťanských hodnotách.</p>
+<ul class="korab-points">
+<li>Informácie o škole, dokumenty, galéria a aktuálna nástenka na samostatnom webe.</li>
+<li>Priestor, v ktorom sa vzdelávanie spája s prijatím, tvorivosťou a Božou láskou.</li>
+<li>Praktický kontakt pre rodičov aj záujemcov o prijatie dieťaťa.</li>
+</ul>
+<div class="d-flex flex-wrap gap-2">
+<a class="button" href="https://cms-korab.sk/" rel="noopener noreferrer" target="_blank">Navštíviť web CMŠ Koráb <span aria-hidden="true">↗</span></a>
+<a class="button button--ghost" href="https://cms-korab.sk/kontakt/" rel="noopener noreferrer" target="_blank">Kontakt školy</a>
+</div>
+<div class="korab-contact">
+<span>⌖ Hviezdoslavova 1785, Liptovský Hrádok</span>
+<a href="tel:+421918828184">+421 918 828 184</a>
+<a href="mailto:cmskorab@gmail.com">cmskorab@gmail.com</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section section--white" id="dokumenty">
+<div class="container documents-shell">
+<div class="section-heading">
+<span class="eyebrow">Na stiahnutie</span>
+<h2 class="section-title">Dokumenty a zborový časopis.</h2>
+<p class="section-lead">V ostrej verzii môže byť táto sekcia napojená na Google Disk alebo cloudové úložisko a dokumenty sa budú spravovať cez administráciu.</p>
+<a class="button button--ghost" href="https://www.ecavlh.sk/dokumenty" rel="noopener" target="_blank">Otvoriť pôvodný archív</a>
+</div>
+<div class="document-list reveal">
+<article class="document-item"><span class="document-icon">PDF</span><span><strong>Kňazská správa za rok 2025</strong><small>Výročná správa cirkevného zboru</small></span><a href="https://www.ecavlh.sk/documentloader.php?filename=kn%CC%8Cazska%CC%81+spra%CC%81va+2025+lh.pdf&amp;id=887" rel="noopener" target="_blank">Stiahnuť</a></article>
+<article class="document-item"><span class="document-icon">PDF</span><span><strong>Hrádocký prameň</strong><small>Zborový časopis — archív vydaní</small></span><a href="https://www.ecavlh.sk/zborovy-casopis" rel="noopener" target="_blank">Archív</a></article>
+<article class="document-item"><span class="document-icon">DOC</span><span><strong>Tlačivá a žiadosti</strong><small>Miesto pre formuláre spravované administrátorom</small></span><a href="#kontakt">Vyžiadať</a></article>
+</div>
+</div>
+</section>
+
+<section class="section section--white about-section-compact" id="o-nas">
+<div class="container about-grid about-grid--compact">
+<div class="about-art about-art--compact reveal">
+<img alt="Svetlý interiér evanjelického kostola s kazateľnicou a oltárom" loading="lazy" src="assets/images/kostol-interier-kazatelnica.webp"/>
+<div class="about-quote"><p>„Túžime byť miestom, kde človek nájde prijatie, pokoj a povzbudenie z Božieho slova.“</p></div>
+</div>
+<div class="about-copy">
+<span class="eyebrow">O našom zbore</span>
+<h2 class="section-title">Spoločenstvo viery a služby.</h2>
+<p>Sme evanjelický cirkevný zbor otvorený deťom, mladým, rodinám, dospelým aj seniorom. Stretávame sa pri Božom slove, modlitbe, sviatostiach a vzájomnej pomoci.</p>
+<div class="about-stats">
+<div class="about-stat"><strong>všetci</strong><small>generácie vítané</small></div>
+<div class="about-stat"><strong>spolu</strong><small>vo viere a službe</small></div>
+<div class="about-stat"><strong>doma</strong><small>v Liptovskom Hrádku</small></div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="kontakt">
+<div class="container">
+<div class="section-heading section-heading--center">
+<span class="eyebrow">Kontakt</span>
+<h2 class="section-title">Ozvite sa alebo príďte medzi nás.</h2>
+<p class="section-lead">Radi odpovieme na otázky, pomôžeme s dohodnutím obradu alebo osobného rozhovoru a privítame vás medzi nami.</p>
+</div>
+<div class="contact-grid">
+<div class="contact-card reveal">
+<h3>Farský úrad a kostol</h3>
+<div class="contact-row"><span>⌖</span><div><strong>ECAV Liptovský Hrádok</strong><br/>Hviezdoslavova 142<br/>033 01 Liptovský Hrádok</div></div>
+<div class="contact-row"><span>✉</span><div><a href="mailto:lipt.hradok@ecav.sk">lipt.hradok@ecav.sk</a></div></div>
+<div class="contact-map"><div><div class="contact-map-marker">⌖</div><strong>Liptovský Hrádok</strong><br/><a href="https://www.google.com/maps/search/?api=1&amp;query=Hviezdoslavova%20142%2C%20Liptovsk%C3%BD%20Hr%C3%A1dok" rel="noopener" target="_blank">Otvoriť v Google Maps →</a></div></div>
+</div>
+<div class="team-grid reveal">
+<article class="team-card"><div class="team-avatar">MB</div><h3>Mgr. Michal Belanji</h3><p>administrátor zboru</p><a href="tel:+421918828303">+421 918 828 303</a></article>
+<article class="team-card"><div class="team-avatar">JP</div><h3>Ing. Ján Pavlík, PhD.</h3><p>zborový dozorca</p><a href="tel:+421903175627">+421 903 175 627</a></article>
+<article class="team-card"><div class="team-avatar">OV</div><h3>Ing. Oliva Vrbičanová</h3><p>zástupkyňa zborového dozorcu</p><a href="tel:+421907712450">+421 907 712 450</a></article>
+<article class="team-card"><div class="team-avatar">CZ</div><h3>Cirkevný zbor</h3><p>všeobecné otázky, dokumenty a termíny</p><a href="mailto:lipt.hradok@ecav.sk">lipt.hradok@ecav.sk</a></article>
+</div>
+</div>
+<div class="organization-toggle-wrap reveal">
+<button aria-controls="organizationStructure" aria-expanded="false" class="organization-toggle" data-bs-target="#organizationStructure" data-bs-toggle="collapse" type="button">
+<span><small>Vedenie a služba</small><strong>Celá organizačná štruktúra</strong></span>
+<span aria-hidden="true" class="organization-toggle__icon">＋</span>
+</button>
+<div class="collapse organization-structure" id="organizationStructure">
+<div class="organization-grid">
+<article class="organization-card">
+<h3>Predsedníctvo cirkevného zboru</h3>
+<ul>
+<li><strong>Mgr. Michal Belanji</strong><span>administrátor cirkevného zboru</span></li>
+<li><strong>Ing. Ján Pavlík, PhD.</strong><span>zborový dozorca</span></li>
+<li><strong>Ing. Oliva Vrbičanová</strong><span>zástupkyňa zborového dozorcu</span></li>
+</ul>
+</article>
+<article class="organization-card">
+<h3>Presbyterstvo</h3>
+<ul class="organization-names">
+<li>Iveta Čupková</li>
+<li>Dana Fronková</li>
+<li>Vlasta Jančiová</li>
+<li>Zuzana Karabínová</li>
+<li>Ivica Multáňová</li>
+<li>Ivan Plachtinský</li>
+<li>Adam Kubovčík</li>
+<li>Dana Šubová</li>
+</ul>
+</article>
+<article class="organization-card">
+<h3>Ďalšie funkcie</h3>
+<dl>
+<div><dt>Kurátor</dt><dd>Ivan Plachtinský</dd></div>
+<div><dt>Pokladníčka</dt><dd>Dana Fronková</dd></div>
+<div><dt>Účtovníčka</dt><dd>Vlasta Jančiová</dd></div>
+<div><dt>Kostolníčka</dt><dd>Vlasta Chlebová</dd></div>
+</dl>
+</article>
+<article class="organization-card">
+<h3>Výbory a CMŠ Koráb</h3>
+<dl>
+<div><dt>Výbory</dt><dd>Vnútromisijný a hospodársky</dd></div>
+<div><dt>CMŠ Koráb</dt><dd>Mgr. Michal Belanji a Ing. Ján Pavlík, PhD. – predsedníctvo cirkevného zboru</dd></div>
+</dl>
+</article>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<footer class="site-footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="brand" href="#domov"><span class="brand-mark brand-mark--luther"><img alt="" class="brand-logo-image" src="assets/images/ecav-logo.png"/></span><span class="brand-copy"><strong>ECAV Liptovský Hrádok</strong><small>Cirkevný zbor</small></span></a>
+<p>Spoločenstvo viery, modlitby a služby otvorené deťom, mladým, rodinám, dospelým aj seniorom.</p>
+</div>
+<div class="footer-col"><h3>Web</h3><a href="#stale-oznamy">Stále po ruke</a><a href="#aktuality">Aktuality</a><a href="#kalendar">Kalendár</a><a href="#program">Program</a><a href="#o-nas">O našom zbore</a></div>
+<div class="footer-col"><h3>Život zboru</h3><a href="#zivot-zboru">Deti</a><a href="#zivot-zboru">Mládež</a><a href="#zivot-zboru">Dospelí</a><a href="#prakticke">Sviatosti a obrady</a></div>
+<div class="footer-col"><h3>CMŠ Koráb</h3><a href="#korab">O škôlke</a><a href="https://cms-korab.sk/" rel="noopener noreferrer" target="_blank">Web školy ↗</a><a href="mailto:cmskorab@gmail.com">cmskorab@gmail.com</a><a href="tel:+421918828184">+421 918 828 184</a></div>
+
+<div class="footer-col"><h3>Kontakt</h3><a href="mailto:lipt.hradok@ecav.sk">lipt.hradok@ecav.sk</a><a href="tel:+421918828303">+421 918 828 303</a><a href="#kontakt">Hviezdoslavova 142</a></div>
+</div>
+<nav aria-label="Užitočné externé odkazy" class="footer-external-links"><span class="footer-external-label">Užitočné odkazy:</span><a href="https://www.ecavlh.sk/" rel="noopener noreferrer" target="_blank">Pôvodný web ECAV LH</a><a href="https://cms-korab.sk/" rel="noopener noreferrer" target="_blank">CMŠ Koráb</a><a href="https://www.ecav.sk/" rel="noopener noreferrer" target="_blank">ECAV na Slovensku</a><a href="https://sem.sk/" rel="noopener noreferrer" target="_blank">SEM</a><a href="https://www.diakonia.sk/" rel="noopener noreferrer" target="_blank">Evanjelická diakonia</a><a href="https://www.liptovskyhradok.sk/" rel="noopener noreferrer" target="_blank">Mesto Liptovský Hrádok</a></nav><div class="footer-bottom"><span>© <span id="currentYear"></span> Evanjelický a. v. cirkevný zbor Liptovský Hrádok</span><span>ECAV na Slovensku</span></div>
+</div>
+</footer>
+<!-- Demo admin -->
+<div class="admin-backdrop" id="adminBackdrop"></div>
+<aside aria-hidden="true" aria-label="Demo administrácia" class="admin-panel" id="adminPanel" inert>
+<div class="admin-header">
+<div><h2>Demo administrácia</h2><p>Lokálny funkčný náhľad bez databázy.</p></div>
+<button aria-label="Zatvoriť administráciu" class="icon-button" id="adminCloseButton" type="button">×</button>
+</div>
+<div class="admin-demo-alert">Toto nie je zabezpečené produkčné rozhranie. Zmeny a nahrané plagáty sa ukladajú iba v tomto prehliadači cez localStorage.</div>
+<div class="admin-tabs" role="tablist">
+<button class="admin-tab is-active" data-admin-tab="announcements" type="button">Oznamy</button>
+<button class="admin-tab" data-admin-tab="events" type="button">Udalosti</button>
+<button class="admin-tab" data-admin-tab="design" type="button">Vzhľad</button>
+</div>
+<div class="admin-view is-active" data-admin-view="announcements">
+<form id="announcementForm">
+<input id="announcementId" type="hidden"/>
+<div class="form-grid">
+<div class="field"><label for="announcementKind">Typ obsahu</label><select id="announcementKind"><option value="persistent">Dlhodobý oznam</option><option value="event">Jednorazová akcia</option></select></div>
+<div class="field"><label for="announcementCategory">Kategória</label><select id="announcementCategory"><option value="Oznam">Oznam</option><option value="Bohoslužby">Bohoslužby</option><option value="Deti">Deti</option><option value="Modlitby">Modlitby</option><option value="Pastorálna služba">Pastorálna služba</option><option value="Komunita">Komunita</option><option value="Praktické">Praktické</option><option value="Dokumenty">Dokumenty</option><option value="Pozvánka">Pozvánka</option></select></div>
+<div class="field field--full announcement-kind-note" id="announcementKindNote">Dlhodobý oznam zostáva na stránke bez zápisu do kalendára. Voliteľne mu môžete určiť dátum platnosti.</div>
+<div class="field" hidden id="announcementStartDateField"><label for="announcementStartDate">Dátum akcie od</label><input id="announcementStartDate" type="date"/></div>
+<div class="field" hidden id="announcementEndDateField"><label for="announcementEndDate">Dátum akcie do <small>(voliteľné)</small></label><input id="announcementEndDate" type="date"/></div>
+<div class="field" hidden id="announcementTimeField"><label for="announcementTime">Čas <small>(voliteľné)</small></label><input id="announcementTime" type="time"/></div>
+<div class="field" hidden id="announcementPlaceField"><label for="announcementPlace">Miesto</label><input id="announcementPlace" maxlength="120" type="text"/></div>
+<div class="field field--full" id="announcementValidUntilField"><label for="announcementValidUntil">Zobraziť do <small>(voliteľné)</small></label><input id="announcementValidUntil" type="date"/><small>Bez dátumu zostane oznam viditeľný neobmedzene.</small></div>
+<div class="field field--full"><label for="announcementTitle">Nadpis</label><input id="announcementTitle" maxlength="90" required="" type="text"/></div>
+<div class="field field--full"><label for="announcementText">Text</label><textarea id="announcementText" maxlength="400" required=""></textarea></div>
+<div class="field field--full poster-upload-field">
+<label for="announcementPosterFile">Plagát alebo obrázok <small>(voliteľné)</small></label>
+<input accept="image/jpeg,image/png,image/webp" id="announcementPosterFile" type="file"/>
+<small>Pre demo sa obrázok zmenší a uloží do localStorage. Odporúčané maximum vstupu je 5 MB.</small>
+<div class="poster-preview" hidden id="announcementPosterPreview"><img alt="Náhľad plagátu" id="announcementPosterPreviewImage"/><button class="admin-mini-button" id="announcementPosterRemove" type="button">Odstrániť plagát</button></div>
+</div>
+<div class="field field--full"><label for="announcementPosterPath">Alebo cesta/URL plagátu <small>(voliteľné)</small></label><input id="announcementPosterPath" maxlength="500" placeholder="assets/images/plagat.webp alebo https://" type="text"/></div>
+<div class="field"><label for="announcementActionLabel">Text odkazu <small>(voliteľné)</small></label><input id="announcementActionLabel" maxlength="60" placeholder="Napr. Prihlásiť sa" type="text"/></div>
+<div class="field"><label for="announcementActionHref">Cieľ odkazu <small>(voliteľné)</small></label><input id="announcementActionHref" maxlength="250" placeholder="#program, mailto: alebo https://" type="text"/></div>
+</div>
+<div class="form-actions"><button class="button button--small" type="submit">Uložiť oznam</button><button class="button button--ghost button--small" hidden="" id="announcementCancelEdit" type="button">Zrušiť úpravu</button></div>
+</form>
+<div class="admin-items" id="adminAnnouncementItems"></div>
+</div>
+<div class="admin-view" data-admin-view="events">
+<form id="eventForm">
+<input id="eventId" type="hidden"/>
+<div class="form-grid">
+<div class="field field--full"><label for="eventTitle">Názov udalosti</label><input id="eventTitle" maxlength="90" required="" type="text"/></div>
+<div class="field"><label for="eventDate">Dátum</label><input id="eventDate" required="" type="date"/></div>
+<div class="field"><label for="eventTime">Čas</label><input id="eventTime" type="time"/></div>
+<div class="field field--full"><label for="eventPlace">Miesto</label><input id="eventPlace" maxlength="120" type="text" value="Evanjelický kostol, Liptovský Hrádok"/></div>
+<div class="field field--full"><label for="eventDescription">Popis</label><textarea id="eventDescription" maxlength="400"></textarea></div>
+</div>
+<div class="form-actions"><button class="button button--small" type="submit">Uložiť udalosť</button><button class="button button--ghost button--small" hidden="" id="eventCancelEdit" type="button">Zrušiť úpravu</button></div>
+</form>
+<div class="admin-items" id="adminEventItems"></div>
+</div>
+<div class="admin-view" data-admin-view="design">
+<h3>Farebný filter úvodných fotografií</h3>
+<p class="admin-design-copy">Výber upraví prekrytie fotografií a uloží sa v prehliadači. Produkčná verzia môže fotografie aj filter spravovať cez CMS.</p>
+<div class="theme-options">
+<button class="theme-option" data-theme-choice="default" type="button"><strong>Prirodzené</strong></button>
+<button class="theme-option" data-theme-choice="dawn" type="button"><strong>Teplé</strong></button>
+<button class="theme-option" data-theme-choice="forest" type="button"><strong>Tmavé</strong></button>
+</div>
+<hr class="admin-divider"/>
+<button class="button button--danger button--small" id="resetDemoData" type="button">Obnoviť pôvodné demo dáta</button>
+</div>
+</aside>
+<div aria-live="polite" class="site-toast" id="toast" role="status"></div>
+<script crossorigin="anonymous" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
